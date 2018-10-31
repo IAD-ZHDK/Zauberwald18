@@ -3,6 +3,10 @@
   "repository": "https://github.com/IAD-ZHDK/Zauberwald18.git",
   "author": "Joël Gähwiler <joel.gaehwiler@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "run": "parcel index.html",
+    "build": "rm -r ./viz; parcel build index.html -d viz --no-source-maps --public-url /viz/"
+  },
   "dependencies": {
     "d3": "^5.7.0",
     "deep-copy": "^1.4.2",
