@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "run": "parcel index.html",
-    "build": "rm -r ./viz; parcel build index.html -d viz --no-source-maps --public-url /Zauberwald18/viz/"
+    "build": "rm -r ./viz; parcel build index.html -d viz --no-source-maps"
   },
   "dependencies": {
     "d3": "^5.7.0",
