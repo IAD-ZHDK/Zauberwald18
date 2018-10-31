@@ -1,9 +1,15 @@
 import * as d3 from 'd3';
+import mqtt from 'mqtt';
+import copy from 'deep-copy';
 
 /* Environment */
 
 let width = window.innerWidth;
 let height = window.innerHeight;
+
+/* Keys */
+
+let keys = ['solar1', 'solar2', 'wind1', 'wind2', 'water1', 'water2'];
 
 /* Margin */
 
@@ -18,32 +24,24 @@ const svg = d3.select('#viz')
 /* Layers */
 
 let gArea = svg.append("g");
-let gXAxis = svg.append("g");
 let gYAxis = svg.append("g");
 let gLegend = svg.append("g");
 
-function update() {
+function viz(rawData) {
   /* Data */
 
-  let rawData = [
-    {date: new Date(2015, 0, 1), solar:  640, wind:  960, water: 640},
-    {date: new Date(2015, 1, 1), solar: 3840, wind: 1920, water: 960},
-    {date: new Date(2015, 2, 1), solar: 1600, wind: 1440, water: 960},
-    {date: new Date(2015, 3, 1), solar:  320, wind:  480, water: 640}
-  ];
-
-  let stackData = d3.stack().keys(["solar", "wind", "water"]);
+  let stackData = d3.stack().keys(keys);
 
   let data = stackData(rawData);
 
   /* Scales */
 
-  let x = d3.scaleTime()
-      .domain(d3.extent(rawData, d => d.date))
+  let x = d3.scaleLinear()
+      .domain(d3.extent(rawData, (_, i) => i))
       .range([margin, width - margin]);
 
   let y = d3.scaleLinear()
-      .domain([0, d3.max(rawData, d => d.solar + d.wind + d.water)])
+      .domain([0, d3.max(rawData, d => keys.reduce((v, k) => v + d[k], 0))])
       .range([height - margin, margin]);
 
   let color = d3.scaleOrdinal(d3.schemeCategory10).domain(data.map(d => d.key));
@@ -51,20 +49,20 @@ function update() {
   /* Area Generator */
 
   let area = d3.area()
-      .x(d => x(d.data.date))
+      .x((_, i) => x(i))
       .y0(d => y(d[0]))
       .y1(d => y(d[1]));
 
   /* Legend */
 
   const g = gLegend
-      .attr("transform", `translate(${margin},${margin})`)
+      .attr("transform", `translate(${margin},${margin-40})`)
       .attr("font-family", "sans-serif")
       .attr("font-size", 10)
       .selectAll("g")
       .data(color.domain().slice().reverse())
       .enter().append("g")
-      .attr("transform", (d, i) => `translate(0,${i * 25})`);
+      .attr("transform", (d, i) => `translate(${i * 100}, 10)`);
 
   g.append("rect")
       .attr("width", 19)
@@ -79,10 +77,6 @@ function update() {
 
   /* Axis */
 
-  gXAxis
-      .attr("transform", `translate(0,${height - margin})`)
-      .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
-
   gYAxis
       .attr("transform", `translate(${width - margin},0)`)
       .call(d3.axisRight(y))
@@ -90,14 +84,56 @@ function update() {
 
   /* Viz */
 
-  gArea
+  let areaSet = gArea
       .selectAll("path")
-      .data(data)
-      .enter().append("path")
-      .attr("fill", d => color(d.key))
+      .data(data);
+
+  areaSet.enter().append("path");
+
+  areaSet.attr("fill", d => color(d.key))
       .attr("d", d => area(d))
       .append("title")
       .text(d => d.key);
 }
 
-update();
+/* Data */
+
+let store = {};
+
+keys.forEach(k => {
+  store[k] = 0;
+});
+
+let data = [];
+
+for (let i=0; i<200; i++) {
+  data.push(copy(store));
+}
+
+/* Snapshooter */
+
+function snapshot() {
+  data.push(copy(store));
+
+  if (data.length > 200) {
+    data.shift();
+  }
+
+  viz(data);
+}
+
+setInterval(snapshot, 250);
+
+/* Input */
+
+let client  = mqtt.connect('wss://zw18zw18:zw18zw18@broker.shiftr.io');
+
+client.on('connect', () => {
+  client.subscribe('#');
+});
+
+client.on('message', (topic, message) => {
+  if (keys.indexOf(topic) >= 0) {
+    store[topic] = parseFloat(message);
+  }
+});

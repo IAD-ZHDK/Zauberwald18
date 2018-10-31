@@ -4,7 +4,9 @@
   "author": "Joël Gähwiler <joel.gaehwiler@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "d3": "^5.7.0"
+    "d3": "^5.7.0",
+    "deep-copy": "^1.4.2",
+    "mqtt": "^2.18.8"
   },
   "devDependencies": {
     "parcel-bundler": "^1.10.3"
