@@ -1,3 +1,5 @@
+import '@babel/polyfill';
+
 import * as d3 from 'd3';
 import mqtt from 'mqtt';
 import copy from 'deep-copy';
