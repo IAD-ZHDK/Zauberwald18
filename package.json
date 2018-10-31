@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "repository": "https://github.com/IAD-ZHDK/Zauberwald18.git",
+  "author": "Joël Gähwiler <joel.gaehwiler@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "d3": "^5.7.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.10.3"
+  }
+}
