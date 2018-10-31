@@ -19,7 +19,7 @@ let margin = 100;
 
 /* SVG */
 
-const svg = d3.select('#viz')
+const svg = d3.select('svg')
     .attr('width', width)
     .attr('height', height);
 
