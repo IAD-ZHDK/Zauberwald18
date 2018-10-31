@@ -62,7 +62,7 @@ function viz(rawData) {
       .attr("font-family", "sans-serif")
       .attr("font-size", 10)
       .selectAll("g")
-      .data(color.domain().slice().reverse())
+      .data(color.domain().slice()
       .enter().append("g")
       .attr("transform", (d, i) => `translate(${i * 100}, 10)`);
 
@@ -124,7 +124,7 @@ function snapshot() {
   viz(data);
 }
 
-setInterval(snapshot, 250);
+setInterval(snapshot, 100);
 
 /* Input */
 
