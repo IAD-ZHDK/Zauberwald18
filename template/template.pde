@@ -35,6 +35,11 @@ void draw() {
   // draw image
   background(0);
   image(i, 0, 0, width, height);
+  
+  // reset time
+  if (t > 1) {
+    t = 0;
+  }
 }
 
 void viz(float t, float water, float wind, float solar) {
