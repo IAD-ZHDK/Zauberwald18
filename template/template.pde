@@ -4,9 +4,12 @@ float water = 0;
 float wind = 0;
 float solar = 0;
 
+float t = 0;
+
 void setup() {
-  // fullScreen();
-  size(1000, 1000);
+  //fullScreen();
+  size(1050, 1050, P3D);
+  frameRate(60);
 
   // prepare mask  
   vizMask = createGraphics(width, height);
@@ -17,8 +20,11 @@ void setup() {
 } 
 
 void draw() {
+  // increment time
+  t += 1.0 / 60.0 / 150.0;
+  
   // draw viz
-  viz(1, water, wind, solar);
+  viz(t, water, wind, solar);
 
   // get image
   PImage i = get();
@@ -34,6 +40,7 @@ void draw() {
 void viz(float t, float water, float wind, float solar) {
   // add your code here! :)
   
+  println(t);
   background(255);
   fill(solar * 255, wind * 255, water * 255);
   ellipse(width/2, height/2, height - 10, height - 10);
