@@ -1,8 +1,7 @@
 #include <driver/rmt.h>
-
 #include "neo.h"
 
-#define NEO_PIXEL_COUNT 21
+#define NEO_PIXEL_COUNT 30
 
 rmt_item32_t neo_items[NEO_PIXEL_COUNT * 24 + 1];
 
