@@ -1,4 +1,4 @@
-PGraphics vizMask;
+PShape vizMask;
 
 float water = 0;
 float wind = 0;
@@ -12,12 +12,11 @@ void setup() {
   frameRate(60);
 
   // prepare mask  
-  vizMask = createGraphics(width, height);
-  vizMask.beginDraw();
-  vizMask.background(0);
-  vizMask.ellipse(width/2, height/2, height, height);
-  vizMask.endDraw();
-} 
+  vizMask = loadShape("mask.svg");
+  vizMask.setFill(color(0,0,0));
+  vizMask.scale(vizMask.height / height);
+  vizMask.translate((vizMask.width - width) / -2, 0);
+}
 
 void draw() {
   // increment time
@@ -26,20 +25,17 @@ void draw() {
   // draw viz
   viz(t, water, wind, solar);
 
-  // get image
-  PImage i = get();
-
   // mask image
-  i.mask(vizMask);
-
-  // draw image
-  background(0);
-  image(i, 0, 0, width, height);
+  shape(vizMask, 0, 0);
   
   // reset time
   if (t > 1) {
     t = 0;
   }
+  
+  noStroke();
+  fill(255);
+  text(frameRate, 20, 20);
 }
 
 void keyPressed() {
