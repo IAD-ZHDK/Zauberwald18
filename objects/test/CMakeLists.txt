@@ -8,7 +8,7 @@ project(naos-project)
 set(CMAKE_C_STANDARD 99)
 
 # add your source files
-set(SOURCE_FILES src/main.c src/enc.c src/enc.h src/mot.c src/mot.h src/neo.c src/neo.h src/anemometer.h src/anemoteter.c)
+set(SOURCE_FILES src/main.c src/enc.c src/enc.h src/mot.c src/mot.h src/neo.c src/neo.h src/anemometer.h src/anemoteter.c src/object1.h src/object1.c)
 
 # create a fake library target
 add_library(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})

@@ -6,6 +6,6 @@
       "version": "master"
     }
   },
-  "broker": "mqtts://key:secret@broker.shiftr.io",
+  "broker": "mqtts://try:try@broker.shiftr.io",
   "devices": {}
 }
