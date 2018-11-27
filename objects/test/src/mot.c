@@ -9,9 +9,8 @@
 #include "mot.h"
 
 static double mot_target = 0;
-
 static a32_motion_t mot_mp;
-static bool _twoMotors;
+static bool mot_two_motors;
 
 static void mot_set_raw(int speed) {
   // cap speed
@@ -20,7 +19,9 @@ static void mot_set_raw(int speed) {
   // set duty
   ESP_ERROR_CHECK(ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, (uint32_t)speed));
   ESP_ERROR_CHECK(ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0));
-  if (_twoMotors) {
+
+  // set second motor if available
+  if (mot_two_motors) {
     ESP_ERROR_CHECK(ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_1, (uint32_t)speed));
     ESP_ERROR_CHECK(ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_1));
   }
@@ -40,16 +41,12 @@ static void mot_task(void* p) {
     mot_mp.max_velocity = 1;
     mot_mp.max_acceleration = 0.1;
 
-    // provide measured position
-    // mot_mp.position = position;
-
     // update motion profile (for next ms)
     a32_motion_update(&mot_mp, mot_target, 5);
 
     // move depending on position
-    // naos_log("position: %f, target: %f", mot_mp.position, mot_target);
     if (mot_mp.position > 0) {
-      mot_set_raw(mot_mp.position);
+      mot_set_raw((int)mot_mp.position);
     } else {
       mot_stop();
     }
@@ -59,10 +56,11 @@ static void mot_task(void* p) {
   }
 }
 
-void mot_init(bool twoMotors) {
-  _twoMotors = twoMotors;
+void mot_init(bool two_motors) {
+  // save two motors flag
+  mot_two_motors = two_motors;
+
   // prepare in master config
-  // todo turn of master if there is no movement in motor
   gpio_config_t master = {.pin_bit_mask = GPIO_SEL_16,
                           .mode = GPIO_MODE_OUTPUT,
                           .pull_up_en = GPIO_PULLUP_ENABLE,
@@ -104,7 +102,7 @@ void mot_init(bool twoMotors) {
   // configure ledc channel
   ESP_ERROR_CHECK(ledc_channel_config(&m1a));
 
-  if (_twoMotors) {
+  if (mot_two_motors) {
     // prepare in m1b config
     gpio_config_t in_m2b = {.pin_bit_mask = GPIO_SEL_23,
                             .mode = GPIO_MODE_OUTPUT,
@@ -136,7 +134,8 @@ void mot_init(bool twoMotors) {
 }
 
 void mot_set(double speed) {
-  // TODO: Need lock?
+  // TODO: Where does the 300 come from?
+
   if (speed > 300) {
     mot_target = speed;
   } else {

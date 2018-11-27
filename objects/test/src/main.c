@@ -1,12 +1,5 @@
-#include <art32/numbers.h>
-#include <art32/smooth.h>
-#include <driver/adc.h>
-#include <driver/gpio.h>
-#include <esp_err.h>
-#include <math.h>
 #include <naos.h>
-#include <string.h>
-#include "APA102.h"
+
 #include "object1.h"
 #include "object2.h"
 #include "object3.h"
@@ -14,19 +7,15 @@
 // todo: need spi interface for apa102 leds
 // todo: need i2c implementation sparkfun RGB light sensor
 
-// bool object_a = false;
-// static bool debug = false;
-static int paramNo = 1;  // parameter from GUI for object number
-static long selectedObject = 1;
-static float power;
-static const char* objectName[6] = {
-    "wind1",  "wind2",  "solar1",
-    "solar2", "water1", "water2"};  // I guess we don't need this, just get the topics from the bluetooth GUI
+static long selected_object = 0;
+static double power;
 
 static void loop() {
-  float new_power = 0;
+  // prepare power
+  double new_power = 0;
 
-  switch (selectedObject) {
+  // run object code
+  switch (selected_object) {
     case 1:
       new_power = object1_loop();
       break;
@@ -34,30 +23,32 @@ static void loop() {
       new_power = object2_loop();
       break;
     case 3:
-      //
-      //
       new_power = object3_loop();
       break;
     case 4:
-      naos_log("object number %d", selectedObject);
+      naos_log("object number %d", selected_object);
       break;
     case 5:
-      naos_log("object number %d", selectedObject);
+      naos_log("object number %d", selected_object);
       break;
     case 6:
-      naos_log("object number %d", selectedObject);
+      naos_log("object number %d", selected_object);
+      break;
+    default:
       break;
   }
 
   // naos_log("power%f",power);
-  if (new_power != power) {  // only update if needed
-    naos_publish_d(objectName[selectedObject], new_power, 0, false, NAOS_LOCAL);
+
+  // check if power changed
+  if (new_power != power) {
+    naos_publish_d("value", new_power, 0, false, NAOS_LOCAL);
     power = new_power;
   }
 }
 
 static naos_param_t params[] = {
-    {.name = "Object-Number", .type = NAOS_LONG, .default_l = 1, .sync_l = &paramNo},
+    {.name = "Object-Number", .type = NAOS_LONG, .default_l = 0},
 };
 
 static naos_config_t config = {.device_type = "test",
@@ -71,13 +62,11 @@ void app_main() {
   // initialize naos
   naos_init(&config);
 
-  // APA102_init();
+  // get selected object
+  selected_object = naos_get_l("Object-Number");
 
-  // init objects
-  if (paramNo <= 6) {
-    selectedObject = paramNo;
-  }
-  switch (selectedObject) {
+  // run object setup
+  switch (selected_object) {
     case 1:
       object1_setup();
       break;
@@ -88,13 +77,15 @@ void app_main() {
       object3_setup();
       break;
     case 4:
-      naos_log("object number %d", selectedObject);
+      naos_log("object number: %d", selected_object);
       break;
     case 5:
-      naos_log("object number %d", selectedObject);
+      naos_log("object number: %d", selected_object);
       break;
     case 6:
-      naos_log("object number %d", selectedObject);
+      naos_log("object number: %d", selected_object);
+      break;
+    default:
       break;
   }
 }

@@ -6,7 +6,7 @@
 #define NAOS_PROJECT_OBJECT3_H
 
 void object3_setup();
-float object3_loop();
+double object3_loop();
 float object3_test();
 
 #endif  // NAOS_PROJECT_OBJECT2_H

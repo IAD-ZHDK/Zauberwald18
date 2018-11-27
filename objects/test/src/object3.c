@@ -68,7 +68,8 @@ float object3_test() {
   naos_log("dvert: %d,dhoriz: %d", dvert, dhoriz);
   return 0;
 }
-float object3_loop() {
+
+double object3_loop() {
   //  neoPixelStandard(0);
   int lt = getsenor(1);  // top left
   int rt = getsenor(3);  // top right

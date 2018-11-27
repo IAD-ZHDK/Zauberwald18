@@ -9,7 +9,7 @@ static volatile unsigned long anemo_last_check = 0;
 
 static void anemo_handler(void *_) { anemo_pulse_count++; }
 
-float anemo_get() {
+double anemo_get() {
   // prepare mutex
   static portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -28,7 +28,7 @@ float anemo_get() {
   // calculate rate
   double rate = ((float)pulses / (float)ANEMO_RESOLUTION) * (1000.0 / (float)elapsed_time);
 
-  return (float)rate;
+  return rate;
 }
 
 void anemo_init() {

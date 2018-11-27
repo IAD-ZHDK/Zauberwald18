@@ -1,50 +1,54 @@
-//
-// Created by Franzke Luke on 21/11/18.
 // wind: Duarte_Prantl_Weber
-//
+
 #include <art32/numbers.h>
 #include <art32/smooth.h>
 #include <driver/gpio.h>
 #include <math.h>
+#include <naos.h>
+
 #include "anemometer.h"
 #include "mot.h"
 #include "neoPixelStandard.h"
 
-static double HRZ = 0;
-static double LastHRZ = 0;
-static a32_smooth_t* smoothing;
-
-// neopixel
-static uint8_t neoR = 254;
-static uint8_t neoG = 254;
-static uint8_t neoB = 0;
+static a32_smooth_t* o1_smoothing;
 
 void object1_setup() {
   // smoothing values for object output
-  smoothing = a32_smooth_new(20);
+  o1_smoothing = a32_smooth_new(20);
+
   // install global interrupt service
   ESP_ERROR_CHECK(gpio_install_isr_service(0));
-  // init anenometer
-    anemo_init();
+
+  // init anemometer
+  anemo_init();
+
   // init motor
   mot_init(true);
+
   // init neo pixel
-  neoPixelStandard_setup(neoR, neoG, neoB);
+  neoPixelStandard_setup(254, 254, 0);
 }
 
-float object1_loop() {
-  HRZ = anemo_get();
-  if (abs(HRZ - LastHRZ) > 4) {
-    HRZ = LastHRZ;  // remove any spikes in sensor values
-  }
-  LastHRZ = HRZ;
-  HRZ = a32_smooth_update(smoothing, HRZ);
+double object1_loop() {
+  // read anemometer rate
+  double rate = a32_constrain_d(anemo_get(), 0, 4);
 
-  int motorSpeed = floor(a32_safe_map_f(HRZ, 0, 6, 0, 1023));
+  // smooth rate
+  rate = a32_smooth_update(o1_smoothing, rate);
 
+  naos_log("rate: %f", rate);
+
+  // calculate motor speed
+  int motorSpeed = (int)floor(a32_safe_map_d(rate, 0, 6, 0, 1023));
+
+  // set motor speed
   mot_set(motorSpeed);
 
-  float power = a32_safe_map_f(HRZ, .6, 10, 0, 1);
+  // calculate power
+  double power = a32_safe_map_d(rate, .6, 10, 0, 1);
+
+  // set neo pixel
   neoPixelStandard(power);
+
   return power;
 }

@@ -14,7 +14,7 @@ static uint8_t neoB = 254;
 
 void object2_setup() { neoPixelStandard_setup(neoR, neoG, neoB); }
 
-float object2_loop() {
+double object2_loop() {
   neoPixelStandard(0);
   return 0;
 }

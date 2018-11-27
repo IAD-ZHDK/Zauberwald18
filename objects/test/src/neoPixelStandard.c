@@ -9,16 +9,16 @@
 // static float neoBrightness = .1;
 // static double fadeAmount = 0.01;
 static uint16_t lightAngle = 0;
-static float lightAmplitude = .09;
+static double lightAmplitude = .09;
 static uint8_t neoR = 0;
 static uint8_t neoG = 0;
 static uint8_t neoB = 0;
 
-void neoPixelStandard(float power) {
+void neoPixelStandard(double power) {
   lightAngle += 3;
   lightAngle = lightAngle % 360;
 
-  float neoBrightness = (sin((lightAngle * M_PI / 180) - M_PI_2) + 1) / 2;
+  double neoBrightness = (sin((lightAngle * M_PI / 180) - M_PI_2) + 1) / 2;
   neoBrightness = neoBrightness * lightAmplitude + .03;  // add an offset of .02 so it's never off
 
   if (power > neoBrightness) {
