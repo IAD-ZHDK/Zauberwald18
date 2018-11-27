@@ -7,6 +7,8 @@
 // todo: need spi interface for apa102 leds
 // todo: need i2c implementation sparkfun RGB light sensor
 
+// TODO: Run loop also when offline?
+
 static long selected_object = 0;
 static double power;
 
