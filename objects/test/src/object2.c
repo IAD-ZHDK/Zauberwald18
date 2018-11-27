@@ -1,6 +1,4 @@
-//
-// Created by Franzke Luke on 21/11/18.
-// wind: Chen_Lopez
+// Wind: Chen, Lopez
 
 #include <art32/numbers.h>
 #include <art32/smooth.h>

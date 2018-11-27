@@ -9,7 +9,7 @@
 
 // TODO: Run loop also when offline?
 
-static long selected_object = 0;
+static long object_number = 0;
 static double power;
 
 static void loop() {
@@ -17,7 +17,7 @@ static void loop() {
   double new_power = 0;
 
   // run object code
-  switch (selected_object) {
+  switch (object_number) {
     case 1:
       new_power = object1_loop();
       break;
@@ -28,13 +28,13 @@ static void loop() {
       new_power = object3_loop();
       break;
     case 4:
-      naos_log("object number %d", selected_object);
+      naos_log("object number %d", object_number);
       break;
     case 5:
-      naos_log("object number %d", selected_object);
+      naos_log("object number %d", object_number);
       break;
     case 6:
-      naos_log("object number %d", selected_object);
+      naos_log("object number %d", object_number);
       break;
     default:
       break;
@@ -65,10 +65,10 @@ void app_main() {
   naos_init(&config);
 
   // get selected object
-  selected_object = naos_get_l("Object-Number");
+  object_number = naos_get_l("Object-Number");
 
   // run object setup
-  switch (selected_object) {
+  switch (object_number) {
     case 1:
       object1_setup();
       break;
@@ -79,13 +79,13 @@ void app_main() {
       object3_setup();
       break;
     case 4:
-      naos_log("object number: %d", selected_object);
+      naos_log("object number: %d", object_number);
       break;
     case 5:
-      naos_log("object number: %d", selected_object);
+      naos_log("object number: %d", object_number);
       break;
     case 6:
-      naos_log("object number: %d", selected_object);
+      naos_log("object number: %d", object_number);
       break;
     default:
       break;

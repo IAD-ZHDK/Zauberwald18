@@ -1,4 +1,4 @@
-// wind: Duarte_Prantl_Weber
+// Wind: Duarte, Prantl, Weber
 
 #include <art32/numbers.h>
 #include <art32/smooth.h>

@@ -1,6 +1,3 @@
-#ifndef NEO_H
-#define NEO_H
-
 #include <stdint.h>
 
 typedef struct {
@@ -14,5 +11,3 @@ void neo_set_one(int i, uint8_t r, uint8_t g, uint8_t b);
 void neo_set_all(uint8_t r, uint8_t g, uint8_t b);
 
 void neo_show();
-
-#endif  // NEO_H

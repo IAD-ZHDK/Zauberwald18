@@ -1,8 +1,7 @@
-#include "servoIOT.h"
 #include <naos.h>
-#include "driver/ledc.h"
-#include "driver/pcnt.h"
-#include "soc/ledc_struct.h"
+#include <driver/ledc.h>
+
+#include "servoIOT.h"
 
 #define SERVO_LEDC_INIT_FREQ (50)
 #define SERVO_DUTY_MIN_US (544)
