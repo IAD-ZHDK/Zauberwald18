@@ -7,4 +7,4 @@ void servo1Write(float angle);
 void servo2Setup();
 void servo2Write(float angle);
 
-#endif //NAOS_PROJECT_SERVOIOT_H
+#endif  // NAOS_PROJECT_SERVOIOT_H

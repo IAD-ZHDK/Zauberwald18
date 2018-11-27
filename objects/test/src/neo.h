@@ -3,7 +3,9 @@
 
 #include <stdint.h>
 
-typedef struct { uint8_t r, g, b; } neo_pixel_t;
+typedef struct {
+  uint8_t r, g, b;
+} neo_pixel_t;
 
 void neo_init();
 

@@ -8,4 +8,4 @@
 void object2_setup();
 float object2_loop();
 
-#endif //NAOS_PROJECT_OBJECT2_H
+#endif  // NAOS_PROJECT_OBJECT2_H

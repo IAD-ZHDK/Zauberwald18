@@ -19,4 +19,3 @@ typedef void (*enc_callback_t)(double r);
  * @param cb The encoder callback.
  */
 void enc_init(enc_callback_t cb);
-

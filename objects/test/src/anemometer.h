@@ -5,7 +5,6 @@
 
 #include <stdbool.h>
 
-
 /**
  * Callback is execute with rotational change up to a frequency of 1ms.
  *
@@ -23,4 +22,3 @@ void anenmo_init();
  * get the HRZ from encoder
  */
 float anemo_getHrz();
-

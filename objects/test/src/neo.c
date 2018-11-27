@@ -1,5 +1,5 @@
-#include <driver/rmt.h>
 #include "neo.h"
+#include <driver/rmt.h>
 
 #define NEO_PIXEL_COUNT 30
 
