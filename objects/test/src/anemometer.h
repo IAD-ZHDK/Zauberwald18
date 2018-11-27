@@ -18,9 +18,9 @@ typedef void (*enc_callback_t)(double r);
  *
  * @param cb The encoder callback.
  */
-void anenom_init();
+void anenmo_init();
 /**
  * get the HRZ from encoder
  */
-float anenom_getHrz();
+float anemo_getHrz();
 

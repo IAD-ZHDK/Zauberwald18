@@ -3,17 +3,18 @@
 #include <freertos/event_groups.h>
 #include <naos.h>
 
-static volatile float HRZ = 0;
-static volatile int pulsCount = 0;
-static volatile unsigned long lastHrzCheck = 0;
 #define ENC_RESOLUTION 200
 //#define ENC_PIN GPIO_NUM_33
 
-static void rotation_handler(void *_) {
-    pulsCount++;
+static volatile float HRZ = 0;
+static volatile int pulsCount = 0;
+static volatile unsigned long lastHrzCheck = 0;
+
+static void anemo_handler(void *_) {
+  pulsCount++;
 }
 
-float anenom_getHrz() {
+float anemo_getHrz() {
     unsigned long timeElapsed =  naos_millis() - lastHrzCheck;
         lastHrzCheck = naos_millis();
         HRZ = pulsCount;
@@ -22,8 +23,7 @@ float anenom_getHrz() {
     return HRZ;
 }
 
-
-void anenom_init() {
+void anenmo_init() {
     // configure rotation pin
     gpio_config_t rc;
     rc.pin_bit_mask = GPIO_SEL_33;
@@ -33,7 +33,5 @@ void anenom_init() {
     rc.pull_down_en = GPIO_PULLDOWN_DISABLE;
     gpio_config(&rc);
     // add interrupt handlers
-    gpio_isr_handler_add(GPIO_NUM_33, rotation_handler, NULL);
+    gpio_isr_handler_add(GPIO_NUM_33, anemo_handler, NULL);
 }
-
-

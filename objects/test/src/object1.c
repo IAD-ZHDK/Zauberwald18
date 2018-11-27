@@ -25,7 +25,7 @@ void object1_setup(){
     // install global interrupt service
     ESP_ERROR_CHECK(gpio_install_isr_service(0));
     // init anenometer
-    anenom_init();
+    anenmo_init();
     // init motor
     mot_init(true);
     // init neo pixel
@@ -33,7 +33,7 @@ void object1_setup(){
 }
 
 float object1_loop() {
-    HRZ = anenom_getHrz();
+    HRZ = anemo_getHrz();
     if (abs(HRZ-LastHRZ)>4) {
         HRZ =  LastHRZ;// remove any spikes in sensor values
     }
