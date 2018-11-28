@@ -28,8 +28,8 @@ set(SOURCE_FILES
         src/object2.c
         src/object3.h
         src/object3.c
-        src/servoIOT.h
-        src/servoIOT.c)
+        src/servo.h
+        src/servo.c)
 
 # create a fake library target
 add_library(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})

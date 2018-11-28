@@ -1,14 +1,14 @@
-//
-// Created by Franzke Luke on 21/11/18.
-// solar 1:
+// Solar 1
+
 #include <art32/numbers.h>
 #include <art32/smooth.h>
 #include <driver/adc.h>
 #include <driver/gpio.h>
 #include <math.h>
 #include <naos.h>
+
 #include "neoPixelStandard.h"
-#include "servoIOT.h"
+#include "servo.h"
 
 static uint8_t neoR = 0;
 static uint8_t neoG = 0;
@@ -27,8 +27,9 @@ static int servoverticalLimitHigh = 160;
 static int servoverticalLimitLow = 30;
 
 void object3_setup() {
-  servo1Setup();
-  servo2Setup();
+  // initialize servos
+  servo_setup(true);
+
   // neoPixelStandard_setup(neoR,neoG,neoB);
   adc1_config_width(ADC_WIDTH_BIT_10);
   adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11);
@@ -44,8 +45,8 @@ void object3_setup() {
 }
 
 float object3_test() {
-  servo1Write(30);
-  servo2Write(0);
+  servo_write1(30);
+  servo_write2(0);
   //  neoPixelStandard(0);
   int lt = getsenor(1);  // top left
   int rt = getsenor(3);  // top right
@@ -106,7 +107,7 @@ double object3_loop() {
       servovertical = servoverticalLimitLow;
     }
     //  vertical.write(servovertical);
-    servo1Write(servovertical);
+    servo_write1(servovertical);
   }
 
   if (servovertical > 90) {
@@ -129,7 +130,7 @@ double object3_loop() {
         servohorizontal = servohorizontalLimitLow;
       }
       //  horizontal.write(servohorizontal);
-      servo2Write(servohorizontal);
+      servo_write2(servohorizontal);
     }
   } else {
     if (-1 * tol > dhoriz || dhoriz > tol) {
@@ -151,7 +152,7 @@ double object3_loop() {
         servohorizontal = servohorizontalLimitLow;
       }
       //   horizontal.write(servohorizontal);
-      servo2Write(servohorizontal);
+      servo_write2(servohorizontal);
     }
   }
   //  delay(dtime);
