@@ -14,44 +14,56 @@ static uint8_t neoR = 0;
 static uint8_t neoG = 0;
 static uint8_t neoB = 254;
 
-int getsenor(int sensorNo);
+static int servo_horizontal = 90;
 
-static int servohorizontal = 90;
+static int servo_horizontal_limit_high = 180;
+static int servo_horizontal_limit_low = 0;
 
-static int servohorizontalLimitHigh = 180;
-static int servohorizontalLimitLow = 0;
+static int servo_vertical = 90;
 
-static int servovertical = 90;
+static int servo_vertical_limit_high = 160;
+static int servo_vertical_limit_low = 30;
 
-static int servoverticalLimitHigh = 160;
-static int servoverticalLimitLow = 30;
+static int get_sensor(int n) {
+  switch (n) {
+    case 1:
+      return adc1_get_raw(ADC1_CHANNEL_4);
+    case 2:
+      return adc1_get_raw(ADC1_CHANNEL_5);
+    case 3:
+      return adc1_get_raw(ADC1_CHANNEL_6);
+    case 4:
+      return adc1_get_raw(ADC1_CHANNEL_7);
+    default:
+      break;
+  }
+
+  return 0;
+}
 
 void object3_setup() {
   // initialize servos
   servo_setup(true);
 
   // neoPixelStandard_setup(neoR,neoG,neoB);
-  adc1_config_width(ADC_WIDTH_BIT_10);
-  adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11);
 
-  adc1_config_width(ADC_WIDTH_BIT_10);
-  adc1_config_channel_atten(ADC1_CHANNEL_6, ADC_ATTEN_DB_11);
-
-  adc1_config_width(ADC_WIDTH_BIT_10);
-  adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11);
-
-  adc1_config_width(ADC_WIDTH_BIT_10);
-  adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11);
+  // configure adc channels
+  ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_10));
+  ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11));
+  ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11));
+  ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_6, ADC_ATTEN_DB_11));
+  ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11));
 }
 
 float object3_test() {
   servo_write1(30);
   servo_write2(0);
+
   //  neoPixelStandard(0);
-  int lt = getsenor(1);  // top left
-  int rt = getsenor(3);  // top right
-  int ld = getsenor(4);  // down links
-  int rd = getsenor(2);  // down right
+  int lt = get_sensor(1);  // top left
+  int rt = get_sensor(3);  // top right
+  int ld = get_sensor(4);  // down links
+  int rd = get_sensor(2);  // down right
   naos_log("lt: %d,rt: %d,ld: %d,rd: %d", lt, rt, ld, rd);
 
   // definition der Toleranz und Geschwindigkeit
@@ -72,10 +84,10 @@ float object3_test() {
 
 double object3_loop() {
   //  neoPixelStandard(0);
-  int lt = getsenor(1);  // top left
-  int rt = getsenor(3);  // top right
-  int ld = getsenor(4);  // down links
-  int rd = getsenor(2);  // down right
+  int lt = get_sensor(1);  // top left
+  int rt = get_sensor(3);  // top right
+  int ld = get_sensor(4);  // down links
+  int rd = get_sensor(2);  // down right
                          // naos_log("lt: %d,rt: %d,ld: %d,rd: %d", lt,rt,ld,rd);
 
   // definition der Toleranz und Geschwindigkeit
@@ -95,66 +107,67 @@ double object3_loop() {
   if (-1 * tol > dvert || dvert > tol) {
     if (avt > avd) {
       // servovertical = ++servovertical;
-      servovertical++;
+      servo_vertical++;
     } else if (avt < avd) {
       // servovertical = --servovertical;
-      servovertical--;
+      servo_vertical--;
     }
-    if (servovertical > servoverticalLimitHigh) {
-      servovertical = servoverticalLimitHigh;
+    if (servo_vertical > servo_vertical_limit_high) {
+      servo_vertical = servo_vertical_limit_high;
     }
-    if (servovertical < servoverticalLimitLow) {
-      servovertical = servoverticalLimitLow;
+    if (servo_vertical < servo_vertical_limit_low) {
+      servo_vertical = servo_vertical_limit_low;
     }
     //  vertical.write(servovertical);
-    servo_write1(servovertical);
+    servo_write1(servo_vertical);
   }
 
-  if (servovertical > 90) {
+  if (servo_vertical > 90) {
     if (-1 * tol > dhoriz || dhoriz > tol) {
       if (avl > avr) {
-        // servohorizontal = ++servohorizontal;
-        servohorizontal++;
+        // servo_horizontal = ++servo_horizontal;
+        servo_horizontal++;
 
       } else if (avl < avr) {
-        // servohorizontal = --servohorizontal;
-        servohorizontal--;
+        // servo_horizontal = --servo_horizontal;
+        servo_horizontal--;
 
       } else if (avl == avr) {
         // nothing
       }
-      if (servohorizontal > servohorizontalLimitHigh) {
-        servohorizontal = servohorizontalLimitHigh;
+      if (servo_horizontal > servo_horizontal_limit_high) {
+        servo_horizontal = servo_horizontal_limit_high;
       }
-      if (servohorizontal < servohorizontalLimitLow) {
-        servohorizontal = servohorizontalLimitLow;
+      if (servo_horizontal < servo_horizontal_limit_low) {
+        servo_horizontal = servo_horizontal_limit_low;
       }
-      //  horizontal.write(servohorizontal);
-      servo_write2(servohorizontal);
+      //  horizontal.write(servo_horizontal);
+      servo_write2(servo_horizontal);
     }
   } else {
     if (-1 * tol > dhoriz || dhoriz > tol) {
       if (avl > avr) {
-        // servohorizontal = --servohorizontal;
-        servohorizontal--;
+        // servo_horizontal = --servo_horizontal;
+        servo_horizontal--;
 
       } else if (avl < avr) {
-        // servohorizontal = ++servohorizontal;
-        servohorizontal++;
+        // servo_horizontal = ++servo_horizontal;
+        servo_horizontal++;
 
       } else if (avl == avr) {
         // nothing
       }
-      if (servohorizontal > servohorizontalLimitHigh) {
-        servohorizontal = servohorizontalLimitHigh;
+      if (servo_horizontal > servo_horizontal_limit_high) {
+        servo_horizontal = servo_horizontal_limit_high;
       }
-      if (servohorizontal < servohorizontalLimitLow) {
-        servohorizontal = servohorizontalLimitLow;
+      if (servo_horizontal < servo_horizontal_limit_low) {
+        servo_horizontal = servo_horizontal_limit_low;
       }
-      //   horizontal.write(servohorizontal);
-      servo_write2(servohorizontal);
+      //   horizontal.write(servo_horizontal);
+      servo_write2(servo_horizontal);
     }
   }
+
   //  delay(dtime);
   float msg = avt + avd + avl + avr;
   msg = msg / 4;
@@ -162,24 +175,6 @@ double object3_loop() {
   if (msg > 1) {
     msg = 1;
   }
-  return msg;
-}
 
-int getsenor(int sensorNo) {
-  int val = 0;
-  switch (sensorNo) {
-    case 1:
-      val = adc1_get_raw(ADC1_CHANNEL_4);
-      break;
-    case 2:
-      val = adc1_get_raw(ADC1_CHANNEL_5);
-      break;
-    case 3:
-      val = adc1_get_raw(ADC1_CHANNEL_6);
-      break;
-    case 4:
-      val = adc1_get_raw(ADC1_CHANNEL_7);
-      break;
-  }
-  return val;
+  return msg;
 }
