@@ -1,18 +1,17 @@
 // Wind (Berg & Tal): Chen, Lopez
 
-#include <art32/numbers.h>
-#include <art32/smooth.h>
-#include <driver/gpio.h>
-#include <math.h>
-#include "neoPixelStandard.h"
+#include <naos.h>
+#include "apa.h"
 
-static uint8_t neoR = 0;
-static uint8_t neoG = 0;
-static uint8_t neoB = 254;
-
-void object2_setup() { neoPixelStandard_setup(neoR, neoG, neoB); }
+void object2_setup() {
+  // init apa pixels
+  apa_init(5, APA_DEFAULT_CLOCK_PIN, APA_DEFAULT_DATA_PIN);
+}
 
 double object2_loop() {
-  neoPixelStandard(0);
+  // set pixels
+  apa_set_all(0, 0, 255);
+  apa_show();
+
   return 0;
 }

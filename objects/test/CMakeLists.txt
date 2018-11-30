@@ -11,8 +11,8 @@ set(CMAKE_C_STANDARD 99)
 set(SOURCE_FILES
         src/anemometer.h
         src/anemoteter.c
-        src/APA102.h
-        src/APA102.c
+        src/apa.h
+        src/apa.c
         src/enc.c
         src/enc.h
         src/main.c
