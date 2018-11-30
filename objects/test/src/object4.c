@@ -4,7 +4,7 @@
 
 void object4_setup() {
   // initialize neo pixel
-  neo4_init(280);
+  neo4_init(280, NEO4_DEFAULT_PIN);
 
   neo4_set_all(120, 0, 0, 0);
   neo4_show();

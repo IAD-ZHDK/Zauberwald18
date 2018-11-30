@@ -8,7 +8,9 @@ rmt_item32_t * neo4_items;
 
 neo4_pixel_t * neo4_pixels;
 
-void neo4_init(int length) {
+// TODO: Make async if too slow.
+
+void neo4_init(int length, gpio_num_t pin) {
   // set length
   neo4_length = length;
 
@@ -21,8 +23,8 @@ void neo4_init(int length) {
   // prepare config
   rmt_config_t config;
   config.rmt_mode = RMT_MODE_TX;
-  config.channel = RMT_CHANNEL_0;
-  config.gpio_num = GPIO_NUM_13;
+  config.channel = RMT_CHANNEL_1;
+  config.gpio_num = pin;
   config.mem_block_num = 1;
   config.clk_div = 8;
   config.tx_config.loop_en = 0;
@@ -37,7 +39,7 @@ void neo4_init(int length) {
   ESP_ERROR_CHECK(rmt_config(&config));
 
   // install rmt driver
-  ESP_ERROR_CHECK(rmt_driver_install(RMT_CHANNEL_0, 0, 0));
+  ESP_ERROR_CHECK(rmt_driver_install(RMT_CHANNEL_1, 0, 0));
 
   // clear all pixels
   neo4_set_all(0, 0, 0, 0);
@@ -92,5 +94,5 @@ void neo4_show() {
   item->duration1 = 0;
 
   // show the pixels
-  ESP_ERROR_CHECK(rmt_write_items(RMT_CHANNEL_0, neo4_items, neo4_length * 32, true));
+  ESP_ERROR_CHECK(rmt_write_items(RMT_CHANNEL_1, neo4_items, neo4_length * 32, true));
 }

@@ -8,7 +8,9 @@ rmt_item32_t * neo3_items;
 
 neo3_pixel_t * neo3_pixels;
 
-void neo3_init(int length) {
+// TODO: Make async if too slow.
+
+void neo3_init(int length, gpio_num_t pin) {
   // set length
   neo3_length = length;
 
@@ -22,7 +24,7 @@ void neo3_init(int length) {
   rmt_config_t config;
   config.rmt_mode = RMT_MODE_TX;
   config.channel = RMT_CHANNEL_0;
-  config.gpio_num = GPIO_NUM_13;
+  config.gpio_num = pin;
   config.mem_block_num = 1;
   config.clk_div = 8;
   config.tx_config.loop_en = 0;

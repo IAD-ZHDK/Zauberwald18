@@ -33,7 +33,7 @@ void neoPixelStandard(double power) {
 }
 
 void neoPixelStandard_setup(uint8_t R, uint8_t G, uint8_t B) {
-  neo3_init(30);
+  neo3_init(30, NEO3_DEFAULT_PIN);
   // init neo pixel
   neoR = R;
   neoG = G;
