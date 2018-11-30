@@ -4,9 +4,9 @@
 
 int neo3_length;
 
-rmt_item32_t * neo3_items;
+rmt_item32_t* neo3_items;
 
-neo3_pixel_t * neo3_pixels;
+neo3_pixel_t* neo3_pixels;
 
 // TODO: Make async if too slow.
 

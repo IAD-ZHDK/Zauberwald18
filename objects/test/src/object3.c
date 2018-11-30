@@ -88,7 +88,7 @@ double object3_loop() {
   int rt = get_sensor(3);  // top right
   int ld = get_sensor(4);  // down links
   int rd = get_sensor(2);  // down right
-                         // naos_log("lt: %d,rt: %d,ld: %d,rd: %d", lt,rt,ld,rd);
+                           // naos_log("lt: %d,rt: %d,ld: %d,rd: %d", lt,rt,ld,rd);
 
   // definition der Toleranz und Geschwindigkeit
   // int dtime = 15;

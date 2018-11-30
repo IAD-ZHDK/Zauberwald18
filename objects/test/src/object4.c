@@ -9,41 +9,41 @@ void object4_setup() {
   neo4_set_all(120, 0, 0, 0);
   neo4_show();
 
-//  // smoothing values for object output
-//  o1_smoothing = a32_smooth_new(20);
-//
-//  // install global interrupt service
-//  ESP_ERROR_CHECK(gpio_install_isr_service(0));
-//
-//  // init motor
-//  mot_init(true);
-//
-//  // init neo pixel
-//  neoPixelStandard_setup(254, 254, 0);
+  //  // smoothing values for object output
+  //  o1_smoothing = a32_smooth_new(20);
+  //
+  //  // install global interrupt service
+  //  ESP_ERROR_CHECK(gpio_install_isr_service(0));
+  //
+  //  // init motor
+  //  mot_init(true);
+  //
+  //  // init neo pixel
+  //  neoPixelStandard_setup(254, 254, 0);
 }
 
 double object4_loop() {
-//  // read anemometer rate
-//  double rate = a32_constrain_d(anemo_get(), 0, 4);
-//
-//  // smooth rate
-//  rate = a32_smooth_update(o1_smoothing, rate);
-//
-//  naos_log("rate: %f", rate);
-//
-//  // calculate motor speed
-//  int motorSpeed = (int)floor(a32_safe_map_d(rate, 0, 6, 0, 1023));
-//
-//  // set motor speed
-//  mot_set(motorSpeed);
-//
-//  // calculate power
-//  double power = a32_safe_map_d(rate, .6, 10, 0, 1);
-//
-//  // set neo pixel
-//  neoPixelStandard(power);
-//
-//  return power;
+  //  // read anemometer rate
+  //  double rate = a32_constrain_d(anemo_get(), 0, 4);
+  //
+  //  // smooth rate
+  //  rate = a32_smooth_update(o1_smoothing, rate);
+  //
+  //  naos_log("rate: %f", rate);
+  //
+  //  // calculate motor speed
+  //  int motorSpeed = (int)floor(a32_safe_map_d(rate, 0, 6, 0, 1023));
+  //
+  //  // set motor speed
+  //  mot_set(motorSpeed);
+  //
+  //  // calculate power
+  //  double power = a32_safe_map_d(rate, .6, 10, 0, 1);
+  //
+  //  // set neo pixel
+  //  neoPixelStandard(power);
+  //
+  //  return power;
 
   return 0;
 }
