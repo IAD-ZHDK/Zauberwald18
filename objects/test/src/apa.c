@@ -19,18 +19,14 @@ void apa_init(int length, gpio_num_t clock, gpio_num_t data) {
 
   // prepare bus config
   spi_bus_config_t bus = {
-      .miso_io_num = -1,
-      .mosi_io_num = data,
-      .sclk_io_num = clock,
-      .quadwp_io_num = -1,
-      .quadhd_io_num = -1,
+      .miso_io_num = -1, .mosi_io_num = data, .sclk_io_num = clock, .quadwp_io_num = -1, .quadhd_io_num = -1,
       //.max_transfer_sz = 4,
   };
 
   // prepare interface config
   spi_device_interface_config_t dev = {
       .mode = 0,
-      .clock_speed_hz = 1000000, // TODO: Faster?
+      .clock_speed_hz = 1000000,  // TODO: Faster?
       .spics_io_num = -1,
       .queue_size = 1,
   };
@@ -61,7 +57,7 @@ void apa_show() {
   // send start frame marker
   spi_transaction_t start = {
       .flags = SPI_TRANS_USE_TXDATA,
-      .tx_data = { 0x00, 0x00, 0x00, 0x00 },
+      .tx_data = {0x00, 0x00, 0x00, 0x00},
       .length = 32,
   };
   ESP_ERROR_CHECK(spi_device_transmit(apa_device, &start));
@@ -74,7 +70,7 @@ void apa_show() {
   };
 
   // update all pixels
-  for(int i=apa_length-1; i>=0; i--) {
+  for (int i = apa_length - 1; i >= 0; i--) {
     // set color
     pixel.tx_data[1] = apa_pixels[i].b;
     pixel.tx_data[2] = apa_pixels[i].g;
@@ -87,7 +83,7 @@ void apa_show() {
   // prepare send frame
   spi_transaction_t end = {
       .flags = SPI_TRANS_USE_TXDATA,
-      .tx_data = { 0x00, 0x00, 0x00, 0x00 },
+      .tx_data = {0x00, 0x00, 0x00, 0x00},
       .length = 32,
   };
   ESP_ERROR_CHECK(spi_device_transmit(apa_device, &end));

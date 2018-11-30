@@ -55,33 +55,6 @@ void object3_setup() {
   ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11));
 }
 
-float object3_test() {
-  servo_write1(30);
-  servo_write2(0);
-
-  //  neoPixelStandard(0);
-  int lt = get_sensor(1);  // top left
-  int rt = get_sensor(3);  // top right
-  int ld = get_sensor(4);  // down links
-  int rd = get_sensor(2);  // down right
-  naos_log("lt: %d,rt: %d,ld: %d,rd: %d", lt, rt, ld, rd);
-
-  // definition der Toleranz und Geschwindigkeit
-  // int dtime = 15;
-  int tol = 15;  // tolerance
-
-  // durchschnittswerte rechnen
-  int avt = (lt + rt) / 2;  // durchschnitt top
-  int avd = (ld + rd) / 2;  // durchschnitt bottom
-  int avl = (lt + ld) / 2;  // durchschnitt links
-  int avr = (rt + rd) / 2;  // durchschnitt rechts
-
-  int dvert = avt - avd;   // prüfung der differenz vertikal
-  int dhoriz = avl - avr;  // prüfung der differenz horizontal
-  naos_log("dvert: %d,dhoriz: %d", dvert, dhoriz);
-  return 0;
-}
-
 double object3_loop() {
   //  neoPixelStandard(0);
   int lt = get_sensor(1);  // top left
