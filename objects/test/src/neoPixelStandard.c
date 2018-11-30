@@ -4,7 +4,7 @@
 
 // standard neopixel lighting for most objects
 #include <math.h>
-#include "neo.h"
+#include "neo3.h"
 // neopixel
 // static float neoBrightness = .1;
 // static double fadeAmount = 0.01;
@@ -27,13 +27,13 @@ void neoPixelStandard(double power) {
   uint8_t _r = (uint8_t)floor(neoR * neoBrightness);
   uint8_t _g = (uint8_t)floor(neoG * neoBrightness);
   uint8_t _b = (uint8_t)floor(neoB * neoBrightness);
-  neo_set_all(_r, _g, _b);
-  neo_show();
+  neo3_set_all(_r, _g, _b);
+  neo3_show();
   //  naos_log("power%f",power);
 }
 
 void neoPixelStandard_setup(uint8_t R, uint8_t G, uint8_t B) {
-  neo_init();
+  neo3_init(30);
   // init neo pixel
   neoR = R;
   neoG = G;

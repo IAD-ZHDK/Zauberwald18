@@ -1,4 +1,4 @@
-// Solar 1
+// Solar (Sonnenblume)
 
 #include <art32/numbers.h>
 #include <art32/smooth.h>

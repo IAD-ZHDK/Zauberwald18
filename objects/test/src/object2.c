@@ -1,4 +1,4 @@
-// Wind: Chen, Lopez
+// Wind (Berg & Tal): Chen, Lopez
 
 #include <art32/numbers.h>
 #include <art32/smooth.h>

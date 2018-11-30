@@ -1,4 +1,4 @@
-// Wind: Duarte, Prantl, Weber
+// Wind (Schneesturm): Duarte, Prantl, Weber
 
 #include <art32/numbers.h>
 #include <art32/smooth.h>

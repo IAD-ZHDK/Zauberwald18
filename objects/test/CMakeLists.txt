@@ -18,8 +18,10 @@ set(SOURCE_FILES
         src/main.c
         src/mot.c
         src/mot.h
-        src/neo.c
-        src/neo.h
+        src/neo3.c
+        src/neo3.h
+        src/neo4.c
+        src/neo4.h
         src/neoPixelStandard.c
         src/neoPixelStandard.h
         src/object1.h
@@ -28,6 +30,8 @@ set(SOURCE_FILES
         src/object2.c
         src/object3.h
         src/object3.c
+        src/object4.h
+        src/object4.c
         src/servo.h
         src/servo.c)
 

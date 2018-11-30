@@ -1,13 +1,23 @@
-#include "neo.h"
 #include <driver/rmt.h>
 
-#define NEO_PIXEL_COUNT 30
+#include "neo3.h"
 
-rmt_item32_t neo_items[NEO_PIXEL_COUNT * 24 + 1];
+int neo3_length;
 
-neo_pixel_t neo_pixels[NEO_PIXEL_COUNT];
+rmt_item32_t * neo3_items;
 
-void neo_init() {
+neo3_pixel_t * neo3_pixels;
+
+void neo3_init(int length) {
+  // set length
+  neo3_length = length;
+
+  // allocate rmt items
+  neo3_items = calloc((size_t)length, sizeof(rmt_item32_t));
+
+  // allocate pixels
+  neo3_pixels = calloc((size_t)length, sizeof(neo3_pixel_t));
+
   // prepare config
   rmt_config_t config;
   config.rmt_mode = RMT_MODE_TX;
@@ -30,28 +40,28 @@ void neo_init() {
   ESP_ERROR_CHECK(rmt_driver_install(RMT_CHANNEL_0, 0, 0));
 
   // clear all pixels
-  neo_set_all(0, 0, 0);
+  neo3_set_all(0, 0, 0);
 }
 
-void neo_set_one(int i, uint8_t r, uint8_t g, uint8_t b) {
-  neo_pixels[i].r = r;
-  neo_pixels[i].g = g;
-  neo_pixels[i].b = b;
+void neo3_set_one(int i, uint8_t r, uint8_t g, uint8_t b) {
+  neo3_pixels[i].r = r;
+  neo3_pixels[i].g = g;
+  neo3_pixels[i].b = b;
 }
 
-void neo_set_all(uint8_t r, uint8_t g, uint8_t b) {
-  for (int i = 0; i < NEO_PIXEL_COUNT; i++) {
-    neo_set_one(i, r, g, b);
+void neo3_set_all(uint8_t r, uint8_t g, uint8_t b) {
+  for (int i = 0; i < neo3_length; i++) {
+    neo3_set_one(i, r, g, b);
   }
 }
 
-void neo_show() {
+void neo3_show() {
   // prepare iterator
-  rmt_item32_t* item = neo_items;
+  rmt_item32_t* item = neo3_items;
 
-  for (int i = 0; i < NEO_PIXEL_COUNT; i++) {
+  for (int i = 0; i < neo3_length; i++) {
     // get pixel value
-    uint32_t pixel = (neo_pixels[i].g << 16) | (neo_pixels[i].r << 8) | neo_pixels[i].b;
+    uint32_t pixel = (neo3_pixels[i].g << 16) | (neo3_pixels[i].r << 8) | neo3_pixels[i].b;
 
     // update rmt items
     for (int j = 23; j >= 0; j--) {
@@ -81,5 +91,5 @@ void neo_show() {
   item->duration1 = 0;
 
   // show the pixels
-  ESP_ERROR_CHECK(rmt_write_items(RMT_CHANNEL_0, neo_items, NEO_PIXEL_COUNT * 24, true));
+  ESP_ERROR_CHECK(rmt_write_items(RMT_CHANNEL_0, neo3_items, neo3_length * 24, true));
 }

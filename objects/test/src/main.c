@@ -3,6 +3,7 @@
 #include "object1.h"
 #include "object2.h"
 #include "object3.h"
+#include "object4.h"
 
 // todo: need spi interface for apa102 leds
 // todo: need i2c implementation sparkfun RGB light sensor
@@ -28,7 +29,7 @@ static void loop() {
       new_power = object3_loop();
       break;
     case 4:
-      naos_log("object number %d", object_number);
+      new_power = object4_loop();
       break;
     case 5:
       naos_log("object number %d", object_number);
@@ -79,7 +80,7 @@ void app_main() {
       object3_setup();
       break;
     case 4:
-      naos_log("object number: %d", object_number);
+      object4_setup();
       break;
     case 5:
       naos_log("object number: %d", object_number);
