@@ -13,6 +13,8 @@ set(SOURCE_FILES
         src/anemoteter.c
         src/apa.h
         src/apa.c
+        src/apds.h
+        src/apds.c
         src/enc.c
         src/enc.h
         src/main.c
@@ -32,6 +34,8 @@ set(SOURCE_FILES
         src/object3.c
         src/object4.h
         src/object4.c
+        src/object5.h
+        src/object5.c
         src/servo.h
         src/servo.c)
 
