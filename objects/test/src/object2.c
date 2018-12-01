@@ -7,8 +7,8 @@
 #include <math.h>
 #include <naos.h>
 
-#include "apa.h"
 #include "anemometer.h"
+#include "apa.h"
 #include "object2.h"
 
 static a32_smooth_t* o1_smoothing;
