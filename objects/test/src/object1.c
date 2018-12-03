@@ -26,7 +26,7 @@ void object1_setup() {
   mot_init(true);
 
   // init neo pixel
-  neoPixelStandard_setup(254, 254, 0);
+  neoPixelStandard_setup(254, 0, 254); // magenta
 }
 
 double object1_loop() {
@@ -42,6 +42,10 @@ double object1_loop() {
   int motorSpeed = (int)floor(a32_safe_map_d(rate, 0, 6, 0, 1023));
 
   // set motor speed
+  if (motorSpeed < 300)  { // with less than 300 the dc motors don't rotate
+    motorSpeed = 0;
+  }
+
   mot_set(motorSpeed);
 
   // calculate power

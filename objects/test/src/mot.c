@@ -110,7 +110,7 @@ void mot_init(bool two_motors) {
                             .pull_down_en = GPIO_PULLDOWN_ENABLE,
                             .intr_type = GPIO_INTR_DISABLE};
 
-    // configure in m1b pin
+    // configure in m2b pin
     ESP_ERROR_CHECK(gpio_config(&in_m2b));
     ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
 
@@ -134,11 +134,5 @@ void mot_init(bool two_motors) {
 }
 
 void mot_set(double speed) {
-  // TODO: Where does the 300 come from?
-
-  if (speed > 300) {
     mot_target = speed;
-  } else {
-    mot_target = 0;
-  }
 }
