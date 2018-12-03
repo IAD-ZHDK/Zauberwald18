@@ -12,48 +12,72 @@ class Clock {
 
   private int fillColor;
 
-  private ArrayList<PVector> list;
-  private int counter = 0;
-  private int counterArray = 0;
+  private ArrayList<PVector> list = new ArrayList<>();
+  private int startCounter = 0;
+  private int endCounter = 0;
 
-  Clock(PApplet parent, Table table, String column, int color, float mapper) {
+  private final static int SEGMENTS = 180;
+
+  Clock(PApplet parent, Table table, String column, int color, float max) {
+    // save reference
     this.p = parent;
 
-    float angle = 0;
-    float angleSpeed = 2.2f;
+    // save color
+    this.fillColor = color;
 
-    list = new ArrayList<>();
+    // prepare angle
+    float angle = 0;
+
+    // iterate through all entries
     for (int i = 0; i < table.getRowCount(); i++) {
+      // get value
       float data = table.getFloat(i, column);
-      float lineSize = map(data, 0, mapper, 0, parent.height / 2f);
+
+      // calculate position
+      float lineSize = map(data, 0, max, 0, parent.height / 2f);
       float x = cos(radians(angle)) * lineSize + parent.width / 2f;
       float y = sin(radians(angle)) * lineSize + parent.height / 2f;
-      angle = angle + angleSpeed;
+
+      // advance angle
+      angle = angle + 360f / SEGMENTS;
+
+      // add point
       list.add(new PVector(x, y));
     }
-    this.fillColor = color;
   }
 
   void display() {
-    p.beginShape();
+    // set color
+    p.fill(fillColor);
     p.noStroke();
+
+    // begin shape
+    p.beginShape();
+
+    // set first two points
     p.curveVertex(p.width / 2f, p.height / 2f);
     p.curveVertex(p.width / 2f, p.height / 2f);
 
-    for (int i = counterArray; i < counter; i++) {
-      // stroke(255);
-      p.fill(fillColor);
+    // add other points
+    for (int i = startCounter; i < endCounter; i++) {
       p.curveVertex(list.get(i).x, list.get(i).y);
     }
 
+    // finish shape
     p.endShape();
 
-    if (counter > 165 && counter < list.size() - 1) {
-      counterArray++;
+    // increase end
+    endCounter++;
+
+    // otherwise increase start if we did one rotation
+    if (endCounter > SEGMENTS+2) {
+      startCounter++;
     }
 
-    if (counter < list.size()) {
-      counter++;
+    // check if end has been reached
+    if(endCounter >= list.size()) {
+      endCounter = 0;
+      startCounter = 0;
     }
   }
 }

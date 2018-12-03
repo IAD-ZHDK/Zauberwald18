@@ -9,7 +9,7 @@ class Rings {
   private PApplet parent;
 
   private int color;
-  private float list[] = new float[8000];
+  private float[] list = new float[8000];
   private int index = 0;
 
   Rings(PApplet parent, Table table, String column, int color) {

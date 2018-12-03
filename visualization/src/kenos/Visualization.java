@@ -52,14 +52,14 @@ public class Visualization {
     clockWind.display();
     clockRain.display();
 
-    // draw rings
-    ringWind.paint();
-    ringRain.paint();
-    ringSun.paint();
-
     // draw black inner circle
     p.fill(0);
     p.noStroke();
     p.ellipse(p.width / 2f, p.height / 2f, 250, 250);
+
+    // draw rings
+    ringWind.paint();
+    ringRain.paint();
+    ringSun.paint();
   }
 }
