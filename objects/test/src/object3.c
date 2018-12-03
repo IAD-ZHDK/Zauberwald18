@@ -10,9 +10,13 @@
 #include "neoPixelStandard.h"
 #include "servo.h"
 
-static uint8_t neoR = 0;
-static uint8_t neoG = 0;
-static uint8_t neoB = 254;
+static uint8_t neoR = 254;
+static uint8_t neoG = 254;
+static uint8_t neoB = 0;
+
+
+static a32_smooth_t* o1_smoothing;
+
 
 static int servo_horizontal = 90;
 
@@ -44,8 +48,9 @@ static int get_sensor(int n) {
 void object3_setup() {
   // initialize servos
   servo_setup(true);
-
   // neoPixelStandard_setup(neoR,neoG,neoB);
+    // smoothing values for object output
+    o1_smoothing = a32_smooth_new(20);
 
   // configure adc channels
   ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_10));
@@ -141,13 +146,13 @@ double object3_loop() {
     }
   }
 
-  //  delay(dtime);
-  float msg = avt + avd + avl + avr;
-  msg = msg / 4;
-  msg = msg / 400.0;
-  if (msg > 1) {
-    msg = 1;
+  float power = avt + avd + avl + avr;
+    power = power / 4;
+    power = power / 400.0;
+  if (power > 1) {
+      power = 1;
   }
+    power = a32_smooth_update(o1_smoothing, power);
 
-  return msg;
+  return power;
 }
