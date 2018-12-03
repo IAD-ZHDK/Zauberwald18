@@ -16,12 +16,13 @@ public class Sketch extends PApplet {
   private int start = 0;
 
   private kenos.Visualization viz1;
+  private electroswing.Visualization viz2;
 
   private static final int LENGTH = 180;
 
   public void settings() {
     // set size
-    size(1050, 1050, P3D);
+    size(1050, 1050, P3D); // FX2D
   }
 
   public void setup() {
@@ -34,9 +35,11 @@ public class Sketch extends PApplet {
 
     // create visualizations
     viz1 = new kenos.Visualization(this);
+    viz2 = new electroswing.Visualization(this);
 
     // setup visualization
     viz1.setup();
+    viz2.setup();
 
     // set start
     start = millis();
@@ -54,15 +57,18 @@ public class Sketch extends PApplet {
     float wind = max(wind1, wind2);
     float solar = max(solar1, solar2);
 
-    // push matrix
+    // push matrix and style
     this.pushMatrix();
+    this.pushStyle();
 
     // TODO: Draw mask?
 
     // draw visualization
-    this.viz1.draw(time, water, wind, solar);
+    // this.viz1.draw(time, water, wind, solar);
+    this.viz2.draw(time, water, wind, solar);
 
-    // pop matrix
+    // pop matrix and styl
+    this.popStyle();
     this.popMatrix();
 
     // reset time
