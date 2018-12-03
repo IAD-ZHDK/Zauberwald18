@@ -3,13 +3,15 @@ package kenos;
 import processing.core.*;
 import processing.data.*;
 
+import static processing.core.PApplet.*;
+
 public class Visualization {
   private PApplet p;
 
   private Clock clockConsumption;
-  private Clock clockSun;
-  private Clock clockWind;
-  private Clock clockRain;
+  private FixedClock clockSun;
+  private FixedClock clockWind;
+  private FixedClock clockRain;
 
   private Rings ringWind;
   private Rings ringRain;
@@ -32,9 +34,9 @@ public class Visualization {
     // create clocks
     clockConsumption =
         new Clock(p, data, "consumption", p.color(255), 2500000); // eigentlich 3000000
-    clockWind = new Clock(p, data, "wind", p.color(255, 0, 255, 200), 45);
-    clockSun = new Clock(p, data, "sun", p.color(255, 255, 0, 200), 150);
-    clockRain = new Clock(p, data, "rainfall", p.color(0, 255, 255, 200), 60);
+    clockWind = new FixedClock(p, p.color(255, 0, 255, 200));
+    clockSun = new FixedClock(p, p.color(255, 255, 0, 200));
+    clockRain = new FixedClock(p, p.color(0, 255, 255, 200));
 
     // create rings
     ringWind = new Rings(p, data, "wind", p.color(255, 0, 255));
@@ -45,6 +47,15 @@ public class Visualization {
   public void draw(float t, float water, float wind, float solar) {
     // draw background
     p.background(0);
+
+    // get consumption
+    float consumption = clockConsumption.get();
+    float multiplier = map(consumption, 0, 2500000, 0, 1);
+
+    // set current data
+    clockRain.set(water * multiplier);
+    clockWind.set(wind * multiplier);
+    clockSun.set(solar * multiplier);
 
     // draw clocks
     clockConsumption.display();

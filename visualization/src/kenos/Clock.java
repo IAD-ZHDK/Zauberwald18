@@ -12,7 +12,8 @@ class Clock {
 
   private int fillColor;
 
-  private ArrayList<PVector> list = new ArrayList<>();
+  private ArrayList<PVector> points = new ArrayList<>();
+  private float[] values;
   private int startCounter = 0;
   private int endCounter = 0;
 
@@ -28,13 +29,19 @@ class Clock {
     // prepare angle
     float angle = 0;
 
+    // create array
+    values = new float[table.getRowCount()];
+
     // iterate through all entries
     for (int i = 0; i < table.getRowCount(); i++) {
       // get value
-      float data = table.getFloat(i, column);
+      float value = table.getFloat(i, column);
+
+      // save value
+      values[i] = value;
 
       // calculate position
-      float lineSize = map(data, 0, max, 0, parent.height / 2f);
+      float lineSize = map(value, 0, max, 0, parent.height / 2f);
       float x = cos(radians(angle)) * lineSize + parent.width / 2f;
       float y = sin(radians(angle)) * lineSize + parent.height / 2f;
 
@@ -42,8 +49,12 @@ class Clock {
       angle = angle + 360f / SEGMENTS;
 
       // add point
-      list.add(new PVector(x, y));
+      points.add(new PVector(x, y));
     }
+  }
+
+  float get() {
+    return this.values[this.endCounter];
   }
 
   void display() {
@@ -60,7 +71,7 @@ class Clock {
 
     // add other points
     for (int i = startCounter; i < endCounter; i++) {
-      p.curveVertex(list.get(i).x, list.get(i).y);
+      p.curveVertex(points.get(i).x, points.get(i).y);
     }
 
     // finish shape
@@ -75,7 +86,7 @@ class Clock {
     }
 
     // check if end has been reached
-    if(endCounter >= list.size()) {
+    if(endCounter >= points.size()) {
       endCounter = 0;
       startCounter = 0;
     }
