@@ -15,18 +15,21 @@ static a32_smooth_t* o1_smoothing;
 
 #define NUMPIXELS 81
 
-int sizeImpuls01 = 0;
+int lengthOfImpulse = 0;
 int index01 = 0;
 int dimension = 9;
 bool Ireset = false;
 bool start = false;
-int input;
+double input;
+double power;
 int x;
 int y;
 int countRe;
 int pixels[NUMPIXELS] = {};
+double pixelsBackgroundAnim[NUMPIXELS] = {};
 uint32_t colors[NUMPIXELS] = {};
 uint32_t red;
+uint32_t green;
 uint32_t blue;
 
 void object2_setup() {
@@ -37,29 +40,33 @@ void object2_setup() {
   ESP_ERROR_CHECK(gpio_install_isr_service(0));
 
   // init anemometer
-  anemo_init();
+  anemo_init(GPIO_SEL_19);
 
   // init apa pixels
   apa_init(NUMPIXELS, APA_DEFAULT_CLOCK_PIN, APA_DEFAULT_DATA_PIN);
+// setup background animation
+
+    for (int i = 0; i < NUMPIXELS; i++) {
+        pixelsBackgroundAnim[i] = i;
+    }
 }
+
 
 double object2_loop() {
   // set pixels
-  apa_set_all(0, 0, 255);
-  apa_show();
-
+  //apa_set_one(0,0, 0, 255);
+  //apa_show();
+  //
   // read anemometer rate
-  double rate = a32_constrain_d(anemo_get(), 0, 4);
+  double input = a32_constrain_d(anemo_get(), 0, 5);
   // smooth rate
-  rate = a32_smooth_update(o1_smoothing, rate);
-  // naos_log("rate: %f", rate);
+  input = a32_smooth_update(o1_smoothing, input);
   // calculate power
-  double power = a32_safe_map_d(rate, .6, 10, 0, 1);
+   power = a32_safe_map_d(input, .6, 5, 0, 1);
 
-  // Serial.println(input);
-  if (input > .3) {  // need to check this value
+  if (power > .4) {  //todo: need to check this value
     start = true;
-    naos_log("Ss");
+   // naos_log("Ss");
   }
   if (start) {
     create();
@@ -68,11 +75,33 @@ double object2_loop() {
     reset(0, 0);
   }
   animate();
+    //sin wave pattern in background
 
+ for (int i = 0; i < NUMPIXELS; i++) {
+         // check that this pixel isn't active in wind effect
+         bool active = false;
+         for(int j =0; j<lengthOfImpulse;j++) {
+             int p = pixel(j);
+              if (i == p) {
+                 active = true;
+              }
+        }
+    if (!active) {
+        pixelsBackgroundAnim[i] += .01;
+        int color = 7 + floor(6 * sin(pixelsBackgroundAnim[i]));
+        double fadeDown = a32_safe_map_d(power, 0, .4, 0, color);;
+        color = color-fadeDown;
+        if (colors[i] == 0) {
+            apa_set_one(i, color, 0, color);
+        }
+    }
+}
+//
+    apa_show();
   return power;
 }
 void create() {
-  if (out() != true) {
+  if (out() != true) { // check if we have reached the end of the demensions 
     next();  // delay(50);
   }
 }
@@ -86,14 +115,15 @@ bool out() {
 }
 
 void next() {
-  if (y % 2 == 0) {
-    pixels[sizeImpuls01] = y * dimension + x;
+  if (y % 2 == 0) { // what is this for? Every third strip?
+    pixels[lengthOfImpulse] = y * dimension + x;
   } else {
-    pixels[sizeImpuls01] = y * dimension + (dimension - 1 - x);
+    pixels[lengthOfImpulse] = y * dimension + (dimension - 1 - x);
   }
   int rx;
   int ry;
-  int ra = esp_random() * 3;  // todo: check that how this random works
+  uint32_t ra = esp_random();  //
+  ra = abs(ra>>30); // get just two bits from esp_random();
   if (ra == 0) {
     rx = 1;
     ry = 0;
@@ -110,6 +140,7 @@ void next() {
   int m2y = mountainY(5, 7, x, y);
   int m3x = mountainX(6, 4, x, y);
   int m3y = mountainY(6, 4, x, y);
+
   if (m1x < 2) {
     rx = m1x;
     ry = m1y;
@@ -124,23 +155,23 @@ void next() {
   }
   x += rx;
   y += ry;
-  sizeImpuls01++;
+  lengthOfImpulse++;
   Ireset = false;
 }
 
 int mountainX(int mx, int my, int x, int y) {
   int M1x = mx;
   int M1y = my;
-  int d1 = sqrt(x - M1x) + sqrt(y - M1y);
-  if (d1 == 1 && M1x >= x && M1y >= y) {
+  int distance = sqrt(x - M1x) + sqrt(y - M1y); 
+  if (distance == 1 && M1x >= x && M1y >= y) {
     if (M1x - x == 1) {
       return 0;
     } else {
       return 1;
     }
-  } else if (d1 == 2) {
+  } else if (distance == 2) {
     if (M1x > x && M1y > y) {
-      return 01;
+      return 1;
     } else if (M1x > x) {
       return 0;
     } else {
@@ -154,14 +185,14 @@ int mountainX(int mx, int my, int x, int y) {
 int mountainY(int mx, int my, int x, int y) {
   int M1x = mx;
   int M1y = my;
-  int d1 = sqrt(x - M1x) + sqrt(y - M1y);
-  if (d1 == 1 && M1x >= x && M1y >= y) {
+  int distance = sqrt(x - M1x) + sqrt(y - M1y);
+  if (distance == 1 && M1x >= x && M1y >= y) {
     if (M1x - x == 1) {
       return 1;
     } else {
       return 0;
     }
-  } else if (d1 == 2) {
+  } else if (distance == 2) {
     if (M1x > x && M1y > y) {
       return 0;
     } else if (M1x > y) {
@@ -177,47 +208,54 @@ int mountainY(int mx, int my, int x, int y) {
 }
 
 void animate() {
-  if (index01 < sizeImpuls01) {
+
+  if (index01 < lengthOfImpulse) {
     int p = pixel(index01);
     uint32_t c = color(index01);
-    // strip.setPixelColor(p,c); todo put new apa102 code here
+    int  R = 0;//c  >> 16;
+    int  G = (c  >> 8) & 0xff;
+    int  B = c  & 0xff;
+    apa_set_one(p,R,G,B);
     index01++;
   } else {
     index01 = 0;
     setcol();
   }
+
 }
 
 void setcol() {
-  if (countRe >= sizeImpuls01 && sizeImpuls01 > 3) {
+  if (countRe >= lengthOfImpulse && lengthOfImpulse > 3) {
     Ireset = true;
   }
-  for (int i = sizeImpuls01 - 1; i >= 0; i--) {
-    if (red > 0x000600) {
-      red -= 0x000500;
+    red = 0x000000;
+  for (int i = lengthOfImpulse - 1; i >= 0; i--) {
+    if (green > 0x000600) {
+      green -= 0x000500;
       blue += 0x000005;
-    } else if (input > 30) {
-      red = 0x000000;
+          } else if (power > .4) {  //todo: need to check this value
+      green = 0x000000;
       blue = 0x0000FF;
-    } else if (blue > 0x000045) {
-      red = 0x000000;
-      blue -= 0x000044;
+    } else if (blue > 0x00006) {
+      green = 0x000000;
+      blue -= 0x00005;
     } else {
-      red = 0x000000;
+      green = 0x000000;
       blue = 0x000000;
       countRe++;
     }
-    colors[i] = red + blue;
+    colors[i] = red + green + blue;
   }
 }
 
 void reset(int ix, int iy) {
   x = ix;
   y = iy;
-  sizeImpuls01 = 0;
+  lengthOfImpulse = 0;
   index01 = 0;
-  red = 0x00FF00;
+  green = 0x00FF00;
   blue = 0x0000FF;
+  red = 0x000000;
   start = false;
   countRe = 0;
   Ireset = false;

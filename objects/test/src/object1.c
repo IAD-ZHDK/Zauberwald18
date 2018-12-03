@@ -20,7 +20,7 @@ void object1_setup() {
   ESP_ERROR_CHECK(gpio_install_isr_service(0));
 
   // init anemometer
-  anemo_init();
+  anemo_init(GPIO_SEL_19);
 
   // init motor
   mot_init(true);
