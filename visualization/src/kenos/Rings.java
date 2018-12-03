@@ -3,13 +3,11 @@ package kenos;
 import processing.core.*;
 import processing.data.*;
 
-import static processing.core.PApplet.*;
-
 class Rings {
   private PApplet parent;
 
   private int color;
-  private float[] list = new float[8000];
+  private float[] list;
   private int index = 0;
 
   Rings(PApplet parent, Table table, String column, int color) {
@@ -19,6 +17,9 @@ class Rings {
     // set parameters
     this.color = color;
 
+    // create array
+    list = new float[table.getRowCount()];
+
     // parse data
     for (int i = 0; i < table.getRowCount(); i++) {
       float data = table.getFloat(i, column);
@@ -26,47 +27,52 @@ class Rings {
       // to the wind Data
       // float ampMapped = map(mapPropRainSun,0,3565,0,100);
       // amplitude = dataMapped;
-      if (i < 8000) {
-        if (column.equals("rainfall")) {
-          data = 5 / data + 30;
-        } else if (column.equals("wind")) {
-          data = 140 / data + 30;
-        } else {
-          data = 40 / data + 30;
-        }
-
-        list[i] = data;
+      if (column.equals("rainfall")) {
+        data = 5 / data + 30;
+      } else if (column.equals("wind")) {
+        data = 140 / data + 30;
+      } else {
+        data = 40 / data + 30;
       }
+
+      list[i] = data;
     }
   }
 
   void paint() {
+    // set color
     parent.stroke(color);
     parent.strokeWeight(3);
     parent.noFill();
 
-    if (index < 8000 - 1) {
-      index++;
-    }
-
-    int index2 = index;
-    parent.pushMatrix();
-    parent.translate(parent.width / 2f, parent.height / 2f);
+    // begin shape
     parent.beginShape();
 
-    for (float angle = 360; angle > 0; angle -= 0.8) {
-      float theta = radians(angle);
-      float x = cos(theta);
-      float y = sin(theta);
-      float r1 = list[index2] + parent.random(-20, 20);
-      if (index < 8000 - 1) {
-        index2++;
-      }
+    // copy index
+    int index2 = index;
 
-      parent.vertex(x * r1, y * r1);
+    // draw points
+    for (float angle = 360; angle > 0; angle -= 0.8) {
+      // calculate point
+      PVector v = common.Helpers.pointOnCircle(angle, list[index2]);
+
+      // add vertex
+      parent.vertex(v.x, v.y);
+
+      // increment index
+      index2++;
+      if (index2 > list.length) {
+        index2 = 0;
+      }
     }
 
+    // end shape
     parent.endShape(parent.CLOSE);
-    parent.popMatrix();
+
+    // increment index
+    index++;
+    if (index > list.length) {
+      index = 0;
+    }
   }
 }

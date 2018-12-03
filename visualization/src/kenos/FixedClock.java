@@ -17,7 +17,7 @@ class FixedClock {
   private ArrayList<PVector> list = new ArrayList<>();
   private int counter = 0;
 
-  private final static int SEGMENTS = 180;
+  private static final int SEGMENTS = 180;
 
   FixedClock(PApplet parent, int color) {
     // save reference
@@ -27,7 +27,7 @@ class FixedClock {
     this.fillColor = color;
 
     // fill array
-    for (int i=0; i<SEGMENTS; i++) {
+    for (int i = 0; i < SEGMENTS; i++) {
       list.add(new PVector(0, 0));
     }
   }
@@ -37,12 +37,10 @@ class FixedClock {
     float angle = counter * 360f / SEGMENTS;
 
     // calculate position
-    float lineSize = map(value, 0, 1, 0, p.height / 2f);
-    float x = cos(radians(angle)) * lineSize + p.width / 2f;
-    float y = sin(radians(angle)) * lineSize + p.height / 2f;
+    PVector v = common.Helpers.pointOnCircle(angle, map(value, 0, 1, 0, p.height / 2f));
 
     // set position
-    list.set(counter, new PVector(x, y));
+    list.set(counter, v);
 
     // increment counter
     counter++;

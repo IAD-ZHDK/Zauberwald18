@@ -17,7 +17,7 @@ class Clock {
   private int startCounter = 0;
   private int endCounter = 0;
 
-  private final static int SEGMENTS = 180;
+  private static final int SEGMENTS = 180;
 
   Clock(PApplet parent, Table table, String column, int color, float max) {
     // save reference
@@ -41,15 +41,13 @@ class Clock {
       values[i] = value;
 
       // calculate position
-      float lineSize = map(value, 0, max, 0, parent.height / 2f);
-      float x = cos(radians(angle)) * lineSize + parent.width / 2f;
-      float y = sin(radians(angle)) * lineSize + parent.height / 2f;
+      PVector v = common.Helpers.pointOnCircle(angle, map(value, 0, max, 0, parent.height / 2f));
 
       // advance angle
       angle = angle + 360f / SEGMENTS;
 
       // add point
-      points.add(new PVector(x, y));
+      points.add(v);
     }
   }
 
@@ -66,8 +64,8 @@ class Clock {
     p.beginShape();
 
     // set first two points
-    p.curveVertex(p.width / 2f, p.height / 2f);
-    p.curveVertex(p.width / 2f, p.height / 2f);
+    p.curveVertex(0, 0);
+    p.curveVertex(0, 0);
 
     // add other points
     for (int i = startCounter; i < endCounter; i++) {
@@ -81,12 +79,12 @@ class Clock {
     endCounter++;
 
     // otherwise increase start if we did one rotation
-    if (endCounter > SEGMENTS+2) {
+    if (endCounter > SEGMENTS + 2) {
       startCounter++;
     }
 
     // check if end has been reached
-    if(endCounter >= points.size()) {
+    if (endCounter >= points.size()) {
       endCounter = 0;
       startCounter = 0;
     }

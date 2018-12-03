@@ -54,10 +54,16 @@ public class Sketch extends PApplet {
     float wind = max(wind1, wind2);
     float solar = max(solar1, solar2);
 
+    // push matrix
+    this.pushMatrix();
+
     // TODO: Draw mask?
 
     // draw visualization
     this.kenos.draw(time, water, wind, solar);
+
+    // pop matrix
+    this.popMatrix();
 
     // reset time
     if (time >= 1) {
