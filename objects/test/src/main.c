@@ -24,25 +24,26 @@ static void loop() {
       new_power = object1_loop();
       break;
     case 2:
-      new_power = object2_loop();
+        //new_power =  object2_test();
+         new_power = object2_loop();
       break;
     case 3:
-      new_power = object3_loop();
+        new_power = object3_loop();
       break;
     case 4:
-      new_power = object4_loop();
+        new_power = object4_loop();
       break;
     case 5:
-      new_power = object5_loop();
+        new_power = object5_loop();
       break;
     case 6:
-      naos_log("object number %d", object_number);
+        naos_log("object number %d", object_number);
       break;
     default:
       break;
   }
 
-  // naos_log("power%f",power);
+  naos_log("power%f",power);
 
   // check if power changed
   if (new_power != power) {
