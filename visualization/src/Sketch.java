@@ -15,7 +15,7 @@ public class Sketch extends PApplet {
 
   private int start = 0;
 
-  private kenos.Visualization kenos;
+  private kenos.Visualization viz1;
 
   private static final int LENGTH = 180;
 
@@ -33,10 +33,10 @@ public class Sketch extends PApplet {
     client.subscribe("#");
 
     // create visualizations
-    kenos = new kenos.Visualization(this);
+    viz1 = new kenos.Visualization(this);
 
     // setup visualization
-    kenos.setup();
+    viz1.setup();
 
     // set start
     start = millis();
@@ -60,7 +60,7 @@ public class Sketch extends PApplet {
     // TODO: Draw mask?
 
     // draw visualization
-    this.kenos.draw(time, water, wind, solar);
+    this.viz1.draw(time, water, wind, solar);
 
     // pop matrix
     this.popMatrix();

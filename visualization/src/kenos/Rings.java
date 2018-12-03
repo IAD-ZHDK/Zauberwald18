@@ -4,15 +4,15 @@ import processing.core.*;
 import processing.data.*;
 
 class Rings {
-  private PApplet parent;
+  private PApplet p;
 
   private int color;
   private float[] list;
   private int index = 0;
 
   Rings(PApplet parent, Table table, String column, int color) {
-    // set parent
-    this.parent = parent;
+    // set p
+    this.p = parent;
 
     // set parameters
     this.color = color;
@@ -41,12 +41,12 @@ class Rings {
 
   void paint() {
     // set color
-    parent.stroke(color);
-    parent.strokeWeight(3);
-    parent.noFill();
+    p.stroke(color);
+    p.strokeWeight(3);
+    p.noFill();
 
     // begin shape
-    parent.beginShape();
+    p.beginShape();
 
     // copy index
     int index2 = index;
@@ -57,7 +57,7 @@ class Rings {
       PVector v = common.Helpers.pointOnCircle(angle, list[index2]);
 
       // add vertex
-      parent.vertex(v.x, v.y);
+      p.vertex(v.x, v.y);
 
       // increment index
       index2++;
@@ -67,7 +67,7 @@ class Rings {
     }
 
     // end shape
-    parent.endShape(parent.CLOSE);
+    p.endShape(p.CLOSE);
 
     // increment index
     index++;
