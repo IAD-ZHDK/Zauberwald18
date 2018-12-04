@@ -11,7 +11,7 @@
 #include "servo.h"
 
 static uint8_t neoR = 254;
-static uint8_t neoG = 254;
+static uint8_t neoG = 200;
 static uint8_t neoB = 0;
 
 
@@ -48,7 +48,7 @@ static int get_sensor(int n) {
 void object3_setup() {
   // initialize servos
   servo_setup(true);
-  // neoPixelStandard_setup(neoR,neoG,neoB);
+   neoPixelStandard_setup(neoR,neoG,neoB, 36);
     // smoothing values for object output
     o1_smoothing = a32_smooth_new(20);
 
@@ -61,7 +61,7 @@ void object3_setup() {
 }
 
 double object3_loop() {
-  //  neoPixelStandard(0);
+
   int lt = get_sensor(1);  // top left
   int rt = get_sensor(3);  // top right
   int ld = get_sensor(4);  // down links
@@ -148,7 +148,7 @@ double object3_loop() {
   if (power > 1) {
       power = 1;
   }
-    power = a32_smooth_update(o1_smoothing, power);
-
+  power = a32_smooth_update(o1_smoothing, power);
+  neoPixelStandard(power);
   return power;
 }

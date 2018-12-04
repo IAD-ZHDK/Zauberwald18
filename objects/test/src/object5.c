@@ -26,7 +26,7 @@ void object5_setup() {
   // init apds chip
   apds_init();
   servo_setup(false); // one servo
-  neoPixelStandard_setup(255,200,0);
+  neoPixelStandard_setup(255,200,0,30);
   neo5_init(NUMPIXELS, NEO5_DEFAULT_PIN);
     neo5_show(); // clear pixels
   // smoothing values for object output

@@ -1,7 +1,7 @@
 /**
  * Initialize the anemometer.
  */
-void anemo_init(gpio_num_t pin);
+void anemo_init(uint8_t pinSelect);
 
 /**
  * Returns the rotation frequency of the anemometer in Hz.

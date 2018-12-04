@@ -31,10 +31,16 @@ double anemo_get() {
   return rate;
 }
 
-void anemo_init(gpio_num_t pin) {
+  void anemo_init(uint8_t pinSelect) {
+    gpio_num_t pin = GPIO_NUM_33;
+
+    gpio_config_t rc;
+    rc.pin_bit_mask = GPIO_SEL_33; //
+    if (pinSelect == 1) {
+      pin = GPIO_NUM_19;
+      rc.pin_bit_mask = GPIO_SEL_19; //
+    }
   // configure rotation pin
-  gpio_config_t rc;
-  rc.pin_bit_mask = GPIO_SEL_33; //
   rc.mode = GPIO_MODE_INPUT;
   rc.intr_type = GPIO_INTR_NEGEDGE;  // only on falling edge
   rc.pull_up_en = GPIO_PULLUP_ENABLE;
@@ -42,5 +48,5 @@ void anemo_init(gpio_num_t pin) {
   ESP_ERROR_CHECK(gpio_config(&rc));
 
   // add interrupt handlers
-  ESP_ERROR_CHECK(gpio_isr_handler_add(GPIO_NUM_33, anemo_handler, NULL));
+  ESP_ERROR_CHECK(gpio_isr_handler_add(pin, anemo_handler, NULL));
 }
