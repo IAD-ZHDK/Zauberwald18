@@ -3,6 +3,8 @@ package kenos;
 import processing.core.*;
 import processing.data.*;
 
+import static processing.core.PApplet.*;
+
 class Rings {
   private PApplet p;
 
@@ -20,21 +22,16 @@ class Rings {
     // create array
     list = new float[table.getRowCount()];
 
+    // get max
+    float maxData = 0;
+    for (int i = 0; i < table.getRowCount(); i++) {
+      maxData = max(maxData, table.getFloat(i, column));
+    }
+
     // parse data
     for (int i = 0; i < table.getRowCount(); i++) {
       float data = table.getFloat(i, column);
-      // float dataMapped = map(data, 0, mapper, 100, 20); // this maps rain and sun proportionally
-      // to the wind Data
-      // float ampMapped = map(mapPropRainSun,0,3565,0,100);
-      // amplitude = dataMapped;
-      if (column.equals("rainfall")) {
-        data = 5 / data + 30;
-      } else if (column.equals("wind")) {
-        data = 140 / data + 30;
-      } else {
-        data = 40 / data + 30;
-      }
-
+      data = map(data, 0, maxData, 0, 95) + 15;
       list[i] = data;
     }
   }
@@ -54,7 +51,7 @@ class Rings {
     // draw points
     for (float angle = 360; angle > 0; angle -= 0.8) {
       // calculate point
-      PVector v = common.Helpers.pointOnCircle(angle, list[index2]);
+      PVector v = common.Helpers.pointOnCircle(angle, 125 - list[index2]);
 
       // add vertex
       p.vertex(v.x, v.y);
