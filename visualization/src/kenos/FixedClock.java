@@ -37,7 +37,7 @@ class FixedClock {
     float angle = counter * 360f / SEGMENTS;
 
     // calculate position
-    PVector v = common.Helpers.pointOnCircle(angle, map(value, 0, 1, 0, p.height / 2f));
+    PVector v = common.Helpers.pointOnCircle(angle, map(value, 0, 1, 125, p.height / 2f));
 
     // set position
     list.set(counter, v);

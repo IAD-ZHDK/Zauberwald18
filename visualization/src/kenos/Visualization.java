@@ -34,9 +34,9 @@ public class Visualization {
     // create clocks
     clockConsumption =
         new Clock(p, data, "consumption", p.color(255), 2500000); // eigentlich 3000000
-    clockWind = new FixedClock(p, p.color(255, 0, 255, 200));
-    clockSun = new FixedClock(p, p.color(255, 255, 0, 200));
-    clockRain = new FixedClock(p, p.color(0, 255, 255, 200));
+    clockWind = new FixedClock(p, p.color(255, 0, 255));
+    clockSun = new FixedClock(p, p.color(255, 255, 0));
+    clockRain = new FixedClock(p, p.color(0, 255, 255));
 
     // create rings
     ringWind = new Rings(p, data, "wind", p.color(255, 0, 255));
@@ -55,10 +55,15 @@ public class Visualization {
     float consumption = clockConsumption.get();
     float multiplier = map(consumption, 0, 2500000, 0, 1);
 
+    // calculate inputs
+    float i1 = water * (multiplier / 3);
+    float i2 = wind * (multiplier / 3);
+    float i3 = solar * (multiplier / 3);
+
     // set current data
-    clockRain.set(water * multiplier);
-    clockWind.set(wind * multiplier);
-    clockSun.set(solar * multiplier);
+    clockSun.set(i1 + i2 + i3);
+    clockWind.set(i1 + i2);
+    clockRain.set(i1);
 
     // draw clocks
     clockConsumption.display();
