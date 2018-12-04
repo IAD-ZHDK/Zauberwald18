@@ -31,7 +31,7 @@ double anemo_get() {
   return rate;
 }
 
-void anemo_init(gpio_num_t pin, ) {
+void anemo_init(gpio_num_t pin) {
   // configure rotation pin
   gpio_config_t rc;
   rc.pin_bit_mask = GPIO_SEL_33; //

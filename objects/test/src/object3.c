@@ -68,20 +68,19 @@ double object3_loop() {
   int rd = get_sensor(2);  // down right
                            // naos_log("lt: %d,rt: %d,ld: %d,rd: %d", lt,rt,ld,rd);
 
-  // definition der Toleranz und Geschwindigkeit
-  // int dtime = 15;
+  // int dtime = 15; delay time in original code
   int tol = 40;  // tolerance
 
   // durchschnittswerte rechnen
-  int avt = (lt + rt) / 2;  // durchschnitt top
-  int avd = (ld + rd) / 2;  // durchschnitt bottom
-  int avl = (lt + ld) / 2;  // durchschnitt links
-  int avr = (rt + rd) / 2;  // durchschnitt rechts
+  int avt = (lt + rt) / 2;  // average top
+  int avd = (ld + rd) / 2;  // average bottom
+  int avl = (lt + ld) / 2;  // average links
+  int avr = (rt + rd) / 2;  // average rechts
 
-  int dvert = avt - avd;   // prüfung der differenz vertikal
-  int dhoriz = avl - avr;  // prüfung der differenz horizontal
+  int dvert = avt - avd;   // check difference vertical
+  int dhoriz = avl - avr;  // check difference horisontal
 
-  // berechnung und anpassung der servopositionen
+  // set servo position
   if (-1 * tol > dvert || dvert > tol) {
     if (avt > avd) {
       // servovertical = ++servovertical;
@@ -96,7 +95,6 @@ double object3_loop() {
     if (servo_vertical < servo_vertical_limit_low) {
       servo_vertical = servo_vertical_limit_low;
     }
-    //  vertical.write(servovertical);
     servo_write1(servo_vertical);
   }
 
@@ -119,7 +117,6 @@ double object3_loop() {
       if (servo_horizontal < servo_horizontal_limit_low) {
         servo_horizontal = servo_horizontal_limit_low;
       }
-      //  horizontal.write(servo_horizontal);
       servo_write2(servo_horizontal);
     }
   } else {
@@ -141,7 +138,6 @@ double object3_loop() {
       if (servo_horizontal < servo_horizontal_limit_low) {
         servo_horizontal = servo_horizontal_limit_low;
       }
-      //   horizontal.write(servo_horizontal);
       servo_write2(servo_horizontal);
     }
   }

@@ -24,7 +24,6 @@ static void loop() {
       new_power = object1_loop();
       break;
     case 2:
-        //new_power =  object2_test();
          new_power = object2_loop();
       break;
     case 3:
@@ -34,7 +33,7 @@ static void loop() {
         new_power = object4_loop();
       break;
     case 5:
-        new_power = object5_loop();
+       new_power = object5_loop();
       break;
     case 6:
         naos_log("object number %d", object_number);
@@ -43,7 +42,7 @@ static void loop() {
       break;
   }
 
-  naos_log("power%f",power);
+ // naos_log("power%f",power);
 
   // check if power changed
   if (new_power != power) {
@@ -85,7 +84,7 @@ void app_main() {
       object4_setup();
       break;
     case 5:
-      object5_setup();
+    object5_setup();
       break;
     case 6:
       naos_log("object number: %d", object_number);
