@@ -22,7 +22,7 @@ void neoPixelStandard(double power) {
   uint8_t _r = (uint8_t)floor(neoR * neoBrightness);
   uint8_t _g = (uint8_t)floor(neoG * neoBrightness);
   uint8_t _b = (uint8_t)floor(neoB * neoBrightness);
-  naos_log("rd: %d",_r );
+  //naos_log("rd: %d",_r );
   neo3_set_all(_r, _g, _b);
   neo3_show();
 }

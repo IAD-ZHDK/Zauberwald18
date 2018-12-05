@@ -25,8 +25,9 @@ static uint8_t tower_B = 0;
 void object5_setup() {
   // init apds chip
   apds_init();
+
   servo_setup(false); // one servo
-  neoPixelStandard_setup(255,200,0,30);
+  neoPixelStandard_setup(255,200,0,29); //  this object just has 29 neopixels for ambient lighting
   neo5_init(NUMPIXELS, NEO5_DEFAULT_PIN);
     neo5_show(); // clear pixels
   // smoothing values for object output
