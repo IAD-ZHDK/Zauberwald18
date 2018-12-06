@@ -22,6 +22,7 @@ public class Sketch extends PApplet {
   private electroswing.Visualization viz2;
   private dedo.Visualization viz3;
   private blitzkraftwerk.Visualization viz4;
+  private radar.Visualization viz5;
 
   private static final int LENGTH = 180;
 
@@ -49,12 +50,14 @@ public class Sketch extends PApplet {
     viz2 = new electroswing.Visualization(this);
     viz3 = new dedo.Visualization(this);
     viz4 = new Visualization(this);
+    viz5 = new radar.Visualization(this);
 
     // setup visualization
     viz1.setup();
     viz2.setup();
     viz3.setup();
     viz4.setup();
+    viz5.setup();
 
     // set start
     start = millis();
@@ -80,7 +83,8 @@ public class Sketch extends PApplet {
     // viz1.draw(time, water, wind, solar);
     // viz2.draw(time, water, wind, solar);
     // viz3.draw(time, water, wind, solar);
-    viz4.draw(time, water, wind, solar);
+    // viz4.draw(time, water, wind, solar);
+    viz5.draw(time, water, wind, solar);
 
     // pop matrix and style
     this.popStyle();
