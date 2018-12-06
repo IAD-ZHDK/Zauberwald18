@@ -1,10 +1,12 @@
 import mqtt.MQTTClient;
-import processing.core.PApplet;
+import processing.core.*;
 
 // TODO: Check MQTT stability.
 
 public class Sketch extends PApplet {
   private MQTTClient client;
+
+  PShape mask;
 
   private float water1;
   private float water2;
@@ -17,6 +19,7 @@ public class Sketch extends PApplet {
 
   private kenos.Visualization viz1;
   private electroswing.Visualization viz2;
+  private dedo.Visualization viz3;
 
   private static final int LENGTH = 180;
 
@@ -33,13 +36,21 @@ public class Sketch extends PApplet {
     // subscribe to topics
     client.subscribe("#");
 
+    // lod mask
+    mask = loadShape("mask.svg");
+    mask.setFill(color(0,0,0));
+    mask.scale(mask.height / height);
+    mask.translate((mask.width - width) / -2, 0);
+
     // create visualizations
     viz1 = new kenos.Visualization(this);
     viz2 = new electroswing.Visualization(this);
+    viz3 = new dedo.Visualization(this);
 
     // setup visualization
     viz1.setup();
     viz2.setup();
+    viz3.setup();
 
     // set start
     start = millis();
@@ -61,15 +72,19 @@ public class Sketch extends PApplet {
     this.pushMatrix();
     this.pushStyle();
 
-    // TODO: Draw mask?
-
     // draw visualization
     // this.viz1.draw(time, water, wind, solar);
-    this.viz2.draw(time, water, wind, solar);
+    //this.viz2.draw(time, water, wind, solar);
+    viz3.draw(time, water, wind, solar);
 
     // pop matrix and styl
     this.popStyle();
     this.popMatrix();
+
+    // draw mask
+    fill(0);
+    noStroke();
+    shape(mask, 0, 0);
 
     // reset time
     if (time >= 1) {
