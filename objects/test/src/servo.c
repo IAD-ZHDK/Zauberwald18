@@ -30,15 +30,26 @@ void servo_setup(bool two_servos) {
   t.timer_num = SERVO_TIMER;
   ESP_ERROR_CHECK(ledc_timer_config(&t));
 
-  ledc_channel_config_t ch1;
-  ch1.channel = SERVO_CHANNEL_1;
-  ch1.duty = 0;  // todo: set init angle
-  ch1.gpio_num = GPIO_NUM_18;
-  ch1.speed_mode = LEDC_HIGH_SPEED_MODE;
-  ch1.timer_sel = SERVO_TIMER;
-  ESP_ERROR_CHECK(ledc_channel_config(&ch1));
 
-  if (two_servos) {
+  if (!two_servos) {
+    //  5volt logic pins are used up for object 5, so need to use a 3.3 pin here
+    ledc_channel_config_t ch1;
+    ch1.channel = SERVO_CHANNEL_1;
+    ch1.duty = 0;  // todo: set init angle
+    ch1.gpio_num = GPIO_NUM_15;
+    ch1.speed_mode = LEDC_HIGH_SPEED_MODE;
+    ch1.timer_sel = SERVO_TIMER;
+    ESP_ERROR_CHECK(ledc_channel_config(&ch1));
+  } else {
+    //  useing the 5volt logic pins for object 3
+    ledc_channel_config_t ch1;
+    ch1.channel = SERVO_CHANNEL_1;
+    ch1.duty = 0;  // todo: set init angle
+    ch1.gpio_num = GPIO_NUM_18;
+    ch1.speed_mode = LEDC_HIGH_SPEED_MODE;
+    ch1.timer_sel = SERVO_TIMER;
+    ESP_ERROR_CHECK(ledc_channel_config(&ch1));
+
     ledc_channel_config_t ch2;
     ch2.channel = SERVO_CHANNEL_2;
     ch2.duty = 0;  // todo: set init angle

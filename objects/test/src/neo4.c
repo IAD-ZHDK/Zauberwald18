@@ -14,7 +14,7 @@ void neo4_init(int length, gpio_num_t pin) {
   // set length
   neo4_length = length;
   // allocate rmt items
-  neo4_items = calloc((size_t)length, sizeof(rmt_item32_t));
+  neo4_items = calloc((size_t)length * 32 + 1, sizeof(rmt_item32_t));
 
   // allocate pixels
   neo4_pixels = calloc((size_t)length, sizeof(neo4_pixel_t));

@@ -1,11 +1,12 @@
 // Wasser (Kugelbahn)
 
 #include "neo4.h"
+#include "neoPixelStandard.h"
 
 void object4_setup() {
   // initialize neo pixel
   neo4_init(280, NEO4_DEFAULT_PIN);
-
+  neoPixelStandard_setup(0,100,255,40); //  this object  has 40 neopixels for ambient lighting
   neo4_set_all(120, 0, 0, 0);
   neo4_show();
 
@@ -23,6 +24,7 @@ void object4_setup() {
 }
 
 double object4_loop() {
+  double power = 0;
   //  // read anemometer rate
   //  double rate = a32_constrain_d(anemo_get(), 0, 4);
   //
@@ -43,7 +45,7 @@ double object4_loop() {
   //  // set neo pixel
   //  neoPixelStandard(power);
   //
-  //  return power;
 
-  return 0;
+  neoPixelStandard(power);
+    return power;
 }

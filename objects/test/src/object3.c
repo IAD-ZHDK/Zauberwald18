@@ -11,7 +11,7 @@
 #include "servo.h"
 
 static uint8_t neoR = 254;
-static uint8_t neoG = 254;
+static uint8_t neoG = 200;
 static uint8_t neoB = 0;
 
 
@@ -48,7 +48,7 @@ static int get_sensor(int n) {
 void object3_setup() {
   // initialize servos
   servo_setup(true);
-  // neoPixelStandard_setup(neoR,neoG,neoB);
+   neoPixelStandard_setup(neoR,neoG,neoB, 36);
     // smoothing values for object output
     o1_smoothing = a32_smooth_new(20);
 
@@ -61,27 +61,26 @@ void object3_setup() {
 }
 
 double object3_loop() {
-  //  neoPixelStandard(0);
+
   int lt = get_sensor(1);  // top left
   int rt = get_sensor(3);  // top right
   int ld = get_sensor(4);  // down links
   int rd = get_sensor(2);  // down right
                            // naos_log("lt: %d,rt: %d,ld: %d,rd: %d", lt,rt,ld,rd);
 
-  // definition der Toleranz und Geschwindigkeit
-  // int dtime = 15;
+  // int dtime = 15; delay time in original code
   int tol = 40;  // tolerance
 
   // durchschnittswerte rechnen
-  int avt = (lt + rt) / 2;  // durchschnitt top
-  int avd = (ld + rd) / 2;  // durchschnitt bottom
-  int avl = (lt + ld) / 2;  // durchschnitt links
-  int avr = (rt + rd) / 2;  // durchschnitt rechts
+  int avt = (lt + rt) / 2;  // average top
+  int avd = (ld + rd) / 2;  // average bottom
+  int avl = (lt + ld) / 2;  // average links
+  int avr = (rt + rd) / 2;  // average rechts
 
-  int dvert = avt - avd;   // prüfung der differenz vertikal
-  int dhoriz = avl - avr;  // prüfung der differenz horizontal
+  int dvert = avt - avd;   // check difference vertical
+  int dhoriz = avl - avr;  // check difference horisontal
 
-  // berechnung und anpassung der servopositionen
+  // set servo position
   if (-1 * tol > dvert || dvert > tol) {
     if (avt > avd) {
       // servovertical = ++servovertical;
@@ -96,7 +95,6 @@ double object3_loop() {
     if (servo_vertical < servo_vertical_limit_low) {
       servo_vertical = servo_vertical_limit_low;
     }
-    //  vertical.write(servovertical);
     servo_write1(servo_vertical);
   }
 
@@ -119,7 +117,6 @@ double object3_loop() {
       if (servo_horizontal < servo_horizontal_limit_low) {
         servo_horizontal = servo_horizontal_limit_low;
       }
-      //  horizontal.write(servo_horizontal);
       servo_write2(servo_horizontal);
     }
   } else {
@@ -141,7 +138,6 @@ double object3_loop() {
       if (servo_horizontal < servo_horizontal_limit_low) {
         servo_horizontal = servo_horizontal_limit_low;
       }
-      //   horizontal.write(servo_horizontal);
       servo_write2(servo_horizontal);
     }
   }
@@ -152,7 +148,7 @@ double object3_loop() {
   if (power > 1) {
       power = 1;
   }
-    power = a32_smooth_update(o1_smoothing, power);
-
+  power = a32_smooth_update(o1_smoothing, power);
+  neoPixelStandard(power);
   return power;
 }

@@ -15,7 +15,7 @@ void neo3_init(int length, gpio_num_t pin) {
   neo3_length = length;
 
   // allocate rmt items
-  neo3_items = calloc((size_t)length, sizeof(rmt_item32_t));
+  neo3_items = calloc((size_t)length * 24 * 1, sizeof(rmt_item32_t));
 
   // allocate pixels
   neo3_pixels = calloc((size_t)length, sizeof(neo3_pixel_t));
@@ -80,7 +80,6 @@ void neo3_show() {
         item->level1 = 0;
         item->duration1 = 9;  // 900ns (900ns +/- 150ns per datasheet)
       }
-
       // advance iterator
       item++;
     }

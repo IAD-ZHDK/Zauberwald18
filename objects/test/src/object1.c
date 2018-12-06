@@ -20,18 +20,18 @@ void object1_setup() {
   ESP_ERROR_CHECK(gpio_install_isr_service(0));
 
   // init anemometer
-  anemo_init(GPIO_SEL_19);
+  anemo_init(GPIO_NUM_33);
 
   // init motor
   mot_init(true);
 
   // init neo pixel
-  neoPixelStandard_setup(254, 0, 254); // magenta
+  neoPixelStandard_setup(254, 0, 254, 36); // magenta
 }
 
 double object1_loop() {
   // read anemometer rate
-  double rate = a32_constrain_d(anemo_get(), 0, 4);
+  double rate = a32_constrain_d(anemo_get(), 0, 5.5);
 
   // smooth rate
   rate = a32_smooth_update(o1_smoothing, rate);

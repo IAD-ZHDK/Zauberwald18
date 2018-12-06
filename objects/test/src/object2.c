@@ -40,7 +40,7 @@ void object2_setup() {
   ESP_ERROR_CHECK(gpio_install_isr_service(0));
 
   // init anemometer
-  anemo_init(GPIO_SEL_19);
+  anemo_init(1);
 
   // init apa pixels
   apa_init(NUMPIXELS, APA_DEFAULT_CLOCK_PIN, APA_DEFAULT_DATA_PIN);

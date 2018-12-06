@@ -24,6 +24,8 @@ set(SOURCE_FILES
         src/neo3.h
         src/neo4.c
         src/neo4.h
+        src/neo5.c
+        src/neo5.h
         src/neoPixelStandard.c
         src/neoPixelStandard.h
         src/object1.h
@@ -37,7 +39,7 @@ set(SOURCE_FILES
         src/object5.h
         src/object5.c
         src/servo.h
-        src/servo.c)
+        src/servo.c src/neo5.c src/neo5.h)
 
 # create a fake library target
 add_library(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
