@@ -36,7 +36,7 @@ void servo_setup(bool two_servos) {
     ledc_channel_config_t ch1;
     ch1.channel = SERVO_CHANNEL_1;
     ch1.duty = 0;  // todo: set init angle
-    ch1.gpio_num = GPIO_NUM_15;
+    ch1.gpio_num = GPIO_NUM_25;
     ch1.speed_mode = LEDC_HIGH_SPEED_MODE;
     ch1.timer_sel = SERVO_TIMER;
     ESP_ERROR_CHECK(ledc_channel_config(&ch1));

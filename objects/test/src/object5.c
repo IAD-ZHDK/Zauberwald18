@@ -22,25 +22,22 @@ static uint8_t NUMPIXELS = 11;
 static uint8_t tower_R = 0;
 static uint8_t tower_G = 0;
 static uint8_t tower_B = 0;
+
 void object5_setup() {
   // init apds chip
   apds_init();
-
   servo_setup(false); // one servo
   neoPixelStandard_setup(255,200,0,29); //  this object just has 29 neopixels for ambient lighting
   neo5_init(NUMPIXELS, NEO5_DEFAULT_PIN);
-    neo5_show(); // clear pixels
+  neo5_show(); // clear pixels
   // smoothing values for object output
   o1_smoothing = a32_smooth_new(20);
-
 // cofigure joystick
-
     gpio_set_direction(GPIO_NUM_32, GPIO_MODE_INPUT);
     gpio_set_direction(GPIO_NUM_33, GPIO_MODE_INPUT);
 
     gpio_set_pull_mode(GPIO_NUM_32, GPIO_PULLUP_ONLY);
     gpio_set_pull_mode(GPIO_NUM_33, GPIO_PULLUP_ONLY);
-
 
   // prepare in master config for h Bridge
     gpio_config_t master = {.pin_bit_mask = GPIO_SEL_16,
@@ -99,38 +96,40 @@ double object5_loop() {
     double redPercantage = c.r;
     double ambientLight = c.c;
      redPercantage = redPercantage/ambientLight;
-    double power = a32_safe_map_d(redPercantage, 0.45, .9, 0, 1); // taking into account that there is ≈ 30% red in ambient light.
+
+    double power = a32_safe_map_d(redPercantage, .6, .9, 0, 1); // taking into account that there is ≈ 30% red in ambient light.
     power = a32_smooth_update(o1_smoothing, power);
+  //  naos_log("power: %f, c.c %d, c.r %d", power, c.c, c.r);
     // set up tower glow
    uint16_t redLightIntensity = a32_safe_map_d(power,0,1,0,500);
+    naos_log("redLightIntensity%d",redLightIntensity);
    //
 if (tower_R<redLightIntensity && tower_R<255) {
+
     tower_R++;
-} else if (tower_R>1){
+
+} else if (tower_R>0){
+
     tower_R--;
+
 }
-
-
     if (tower_G<redLightIntensity-250 && tower_G<150) {
         tower_G++;
-    } else if (tower_G>1){
+    } else if (tower_G>0){
         tower_G--;
     }
 
     if (tower_B<redLightIntensity-400 && tower_B<100) {
         tower_B++;
-    } else if (tower_B>1){
+    } else if (tower_B>0){
         tower_B--;
     }
 
-
-
-
+    naos_log("tower_R: %d, tower_G: %d, tower_B: %d, b: %d", tower_R, tower_G, tower_B);
     for (uint8_t i = 4; i < NUMPIXELS; i++) {
        neo5_set_one(i,tower_R,tower_G,tower_B);
     }
 
-  //  naos_log("redLightIntensity: %d", redLightIntensity);
   // joystick
   if (gpio_get_level(GPIO_NUM_32) == 1 && servoPos < servoMax) { //left TODO  check pin number
     servoPos++;
@@ -145,11 +144,10 @@ if (tower_R<redLightIntensity && tower_R<255) {
   } else if (servoPos < servoMin) {
       servoPos++;
   }
-
   // naos_log("servoPos: %d", servoPos);
     unsigned long currentMillis = naos_millis();
 
-    if (currentMillis - previousMillis >= 7000) {
+    if (currentMillis - previousMillis >= 20000) {
         previousMillis = currentMillis;
   // randomly select sun:
     while (activeSun == random) {
@@ -157,57 +155,57 @@ if (tower_R<redLightIntensity && tower_R<255) {
         random = abs(random>>30); // get just two bits from esp_random();
         random +=1; // make sure we have values between 1 and 4
     }
-    naos_log("random: %d,activeSun: %d", random,activeSun);
+    //naos_log("random: %d,activeSun: %d", random,activeSun);
     activeSun = random;
   // laser/sun code
       switch (activeSun) {
         case 1:
-            ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 1));
+              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
               ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 0));
-              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
+              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 1));
               ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 0));
               neo5_set_one(0,255,200,0);
               neo5_set_one(1,0,0,0);
               neo5_set_one(2,0,0,0);
               neo5_set_one(3,0,0,0);
-              servoMin = 70; //todo find the servo min and max for all lasers
-              servoMax = 100;
+           //   servoMin = 70; //todo find the servo min and max for all lasers
+          //    servoMax = 100;
               break;
         case 2:
-            ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
-              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 1));
+             ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
+              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 0));
               ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
-              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 0));
+              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 1));
               neo5_set_one(0,0,0,0);
               neo5_set_one(1,255,200,0);
               neo5_set_one(2,0,0,0);
               neo5_set_one(3,0,0,0);
-              servoMin = 90;
-              servoMax = 160;
+         //     servoMin = 90;
+          //   servoMax = 160;
               break;
         case 3:
-            ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
+             ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 1));
               ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 0));
-              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 1));
+              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
               ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 0));
               neo5_set_one(0,0,0,0);
               neo5_set_one(1,0,0,0);
               neo5_set_one(2,255,200,0);
               neo5_set_one(3,0,0,0);
-              servoMin = 10;
-              servoMax = 90;
+          //    servoMin = 10;
+          //    servoMax = 90;
               break;
         case 4:
-            ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
-              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 0));
+              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
+              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 1));
               ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
-              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 1));
+              ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 0));
               neo5_set_one(0,0,0,0);
               neo5_set_one(1,0,0,0);
               neo5_set_one(2,0,0,0);
               neo5_set_one(3,255,200,0);
-              servoMin = 90;
-              servoMax = 150;
+            //  servoMin = 90;
+           //   servoMax = 150;
               break;
         default:
           break;

@@ -1,7 +1,7 @@
 #include <driver/gpio.h>
 #include <stdint.h>
 
-#define NEO5_DEFAULT_PIN GPIO_NUM_25
+#define NEO5_DEFAULT_PIN GPIO_NUM_15
 
 typedef struct {
     uint8_t r, g, b;

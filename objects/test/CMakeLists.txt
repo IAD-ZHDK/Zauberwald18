@@ -38,8 +38,10 @@ set(SOURCE_FILES
         src/object4.c
         src/object5.h
         src/object5.c
+        src/object6.h
+        src/object6.c
         src/servo.h
-        src/servo.c src/neo5.c src/neo5.h)
+        src/servo.c src/neo5.c src/neo5.h src/object6.h src/object6.c)
 
 # create a fake library target
 add_library(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
