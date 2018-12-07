@@ -28,10 +28,10 @@ void object5_setup() {
   apds_init();
 
   // init neo pixels
-  neo3_init(29, NEO3_DEFAULT_PIN);
+  neo3_init(29, NEO3_DEFAULT_PIN); //  this object just has 29 neopixels for ambient lighting
 
   // init lighting
-  light_init(255, 200, 0, 29); //  this object just has 29 neopixels for ambient lighting
+  light_init(255, 200, 0, 0, 28);
 
   // initialize servos
   servo_setup(false);
