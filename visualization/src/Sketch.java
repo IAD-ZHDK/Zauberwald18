@@ -23,6 +23,7 @@ public class Sketch extends PApplet {
   private dedo.Visualization viz3;
   private blitzkraftwerk.Visualization viz4;
   private radar.Visualization viz5;
+  private wawiso.Visualization viz6;
 
   private static final int LENGTH = 180;
 
@@ -51,6 +52,7 @@ public class Sketch extends PApplet {
     viz3 = new dedo.Visualization(this);
     viz4 = new Visualization(this);
     viz5 = new radar.Visualization(this);
+    viz6 = new wawiso.Visualization(this);
 
     // setup visualization
     viz1.setup();
@@ -58,6 +60,7 @@ public class Sketch extends PApplet {
     viz3.setup();
     viz4.setup();
     viz5.setup();
+    viz6.setup();
 
     // set start
     start = millis();
@@ -84,7 +87,8 @@ public class Sketch extends PApplet {
     // viz2.draw(time, water, wind, solar);
     // viz3.draw(time, water, wind, solar);
     // viz4.draw(time, water, wind, solar);
-    viz5.draw(time, water, wind, solar);
+    // viz5.draw(time, water, wind, solar);
+    viz6.draw(time, water, wind, solar);
 
     // pop matrix and style
     this.popStyle();
