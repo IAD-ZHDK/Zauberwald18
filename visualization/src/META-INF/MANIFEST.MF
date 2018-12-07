@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Class-Path: json4processing.jar log4j-1.2.15.jar Unfolding.jar core.ja
+ r gluegen-rt-natives-linux-aarch64.jar gluegen-rt-natives-linux-amd64
+ .jar gluegen-rt-natives-linux-armv6hf.jar gluegen-rt-natives-linux-i5
+ 86.jar gluegen-rt-natives-macosx-universal.jar gluegen-rt-natives-win
+ dows-amd64.jar gluegen-rt-natives-windows-i586.jar gluegen-rt.jar jog
+ l-all-natives-linux-aarch64.jar jogl-all-natives-linux-amd64.jar jogl
+ -all-natives-linux-armv6hf.jar jogl-all-natives-linux-i586.jar jogl-a
+ ll-natives-macosx-universal.jar jogl-all-natives-windows-amd64.jar jo
+ gl-all-natives-windows-i586.jar jogl-all.jar mqtt.jar org.eclipse.pah
+ o.client.mqttv3-1.2.0.jar
+Main-Class: Main
+
