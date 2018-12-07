@@ -6,7 +6,6 @@ import static processing.core.PApplet.*;
 import static wawiso.Visualization.DOME_RADIUS;
 
 class City {
-  float magnetRadius;
   PVector pos;
   int size;
   private PApplet p;
@@ -15,11 +14,10 @@ class City {
   private float topSpeed;
   private int num;
 
-  City(PApplet parent, float _x, float _y, int size, int magnet) {
+  City(PApplet parent, float _x, float _y, int size) {
     p = parent;
     pos = new PVector(_x, _y);
     this.size = size;
-    magnetRadius = magnet;
     reset();
   }
 
