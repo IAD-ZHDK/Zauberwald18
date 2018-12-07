@@ -6,9 +6,6 @@
 #include "object4.h"
 #include "object5.h"
 
-// todo: need spi interface for apa102 leds
-// todo: need i2c implementation sparkfun RGB light sensor
-
 // TODO: Run loop also when offline?
 
 static long object_number = 0;
@@ -84,7 +81,7 @@ void app_main() {
       object4_setup();
       break;
     case 5:
-    object5_setup();
+      object5_setup();
       break;
     case 6:
       naos_log("object number: %d", object_number);

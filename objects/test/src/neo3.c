@@ -51,10 +51,14 @@ void neo3_set_one(int i, uint8_t r, uint8_t g, uint8_t b) {
   neo3_pixels[i].b = b;
 }
 
-void neo3_set_all(uint8_t r, uint8_t g, uint8_t b) {
-  for (int i = 0; i < neo3_length; i++) {
+void neo3_set_range(uint8_t r, uint8_t g, uint8_t b, int first, int last) {
+  for (int i = first; i <= last; i++) {
     neo3_set_one(i, r, g, b);
   }
+}
+
+void neo3_set_all(uint8_t r, uint8_t g, uint8_t b) {
+  neo3_set_range(r, g, b, 0, neo3_length-1);
 }
 
 void neo3_show() {

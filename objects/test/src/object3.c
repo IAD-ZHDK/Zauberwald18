@@ -7,16 +7,11 @@
 #include <math.h>
 #include <naos.h>
 
-#include "neoPixelStandard.h"
+#include "light.h"
 #include "servo.h"
-
-static uint8_t neoR = 254;
-static uint8_t neoG = 200;
-static uint8_t neoB = 0;
-
+#include "neo3.h"
 
 static a32_smooth_t* o1_smoothing;
-
 
 static int servo_horizontal = 90;
 
@@ -48,9 +43,15 @@ static int get_sensor(int n) {
 void object3_setup() {
   // initialize servos
   servo_setup(true);
-   neoPixelStandard_setup(neoR,neoG,neoB, 36);
-    // smoothing values for object output
-    o1_smoothing = a32_smooth_new(20);
+
+  // initialize neo pixels
+  neo3_init(36, NEO3_DEFAULT_PIN);
+
+  // initialize lighting
+  light_init(254, 200, 0, 0, 35);
+
+  // smoothing values for object output
+  o1_smoothing = a32_smooth_new(20);
 
   // configure adc channels
   ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_10));
@@ -149,6 +150,7 @@ double object3_loop() {
       power = 1;
   }
   power = a32_smooth_update(o1_smoothing, power);
-  neoPixelStandard(power);
+  light_set(power);
+  neo3_show();
   return power;
 }
