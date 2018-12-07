@@ -31,18 +31,16 @@ void object4_setup() {
   // initialize motor
   mot_init(false);
 
-  // initialize neo pixel
-  neo5_init(24, GPIO_NUM_32);
+  // initialize power neo pixel
+  neo5_init(24, GPIO_NUM_13);
   neo5_set_all(0, 127, 127);
   neo5_show();
 
-  // initialize neo pixel
-  neo3_init(40, NEO3_DEFAULT_PIN);
-
   // initialize lighting
+  neo3_init(40, GPIO_NUM_32);
   light_init(0, 100, 255, 0, 39);
 
-  // initialize neo pixel (10, 22, 28, 19)
+  // initialize water neo pixel (10, 22, 28, 19)
   neo4_init(79, GPIO_NUM_25);
   neo4_set_all(0, 0, 0, 0);
   neo4_show();
@@ -103,8 +101,6 @@ double object4_loop() {
     total += object4_pipe[i] ? 1 : 0;
   };
 
-  naos_log("tot: %d", total);
-
   // calculate motor speed
   int speed = 0;
   if (object4_valve > 0) {
@@ -123,6 +119,7 @@ double object4_loop() {
 
   // set lighting
   light_set(power);
+  neo3_show();
 
   return power;
 }
