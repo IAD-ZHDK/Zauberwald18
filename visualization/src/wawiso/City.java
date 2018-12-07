@@ -13,7 +13,7 @@ class City {
   private PVector center_gravity;
   private PVector[] _p, acc, vel;
   private float topSpeed;
-  private int num, nmax;
+  private int num;
 
   City(PApplet parent, float _x, float _y, int size, int magnet) {
     p = parent;
@@ -25,19 +25,18 @@ class City {
 
   void reset() {
     num = size;
-    nmax = size + 10;
+    int nMax = size + 10;
     topSpeed = num / 18.75f;
     center_gravity = new PVector(p.width / 2f, p.height / 2f);
-    _p = new PVector[nmax];
-    acc = new PVector[nmax];
-    vel = new PVector[nmax];
+    _p = new PVector[nMax];
+    acc = new PVector[nMax];
+    vel = new PVector[nMax];
     for (int i = 0; i < num; i++) {
       _p[i] =
           new PVector(
               p.width / 2f - ((DOME_RADIUS - 15) * cos(p.random(TWO_PI))),
               p.height / 2f - ((DOME_RADIUS - 15) * sin(p.random(TWO_PI))));
-      float distance = dist(_p[i].x, _p[i].y, p.width / 2f, p.height / 2f);
-      if (distance > DOME_RADIUS) {}
+
       acc[i] = new PVector(0, 0);
       vel[i] = new PVector(0, 0);
     }
@@ -50,7 +49,7 @@ class City {
     display(water, solar, wind);
   }
 
-  void update() {
+  private void update() {
     for (int i = 0; i < num; i++) {
       acc[i].x = center_gravity.x - _p[i].x;
       acc[i].y = center_gravity.y - _p[i].y;
@@ -68,8 +67,7 @@ class City {
     }
   }
 
-  void display(float water, float solar, float wind) {
-    // topSpeed = map(water, 0, 10, minspeed, minspeed*1.1);
+  private void display(float water, float solar, float wind) {
     for (int i = 0; i < num - 1; i++) {
       if (i < num * 0.78) {
         if (water > 0) {

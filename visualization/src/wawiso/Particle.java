@@ -6,38 +6,34 @@ import static processing.core.PApplet.*;
 import static wawiso.Visualization.DOME_RADIUS;
 
 class Particle {
-  static final float NOISE_MODULATION = 10;
-  static final float NOISE_VARIATION = 20;
-  static final float NOISE_INTERVAL = 5000;
-  static final float NOISE_RESISTANCE = 100;
-  static final int MAX_TREMBLE_TIME = 200;
-  static final float RIPPLE_RADIUS = 12;
-  PApplet p;
-  Boolean inverted = false;
+  private static final float NOISE_MODULATION = 10;
+  private static final float NOISE_VARIATION = 20;
+  private static final float NOISE_INTERVAL = 5000;
+  private static final float NOISE_RESISTANCE = 100;
+  private static final int MAX_TREMBLE_TIME = 200;
+  private static final float RIPPLE_RADIUS = 12;
+  private PApplet p;
+  private Boolean inverted = false;
   int colorE;
   PVector pos;
-  PVector vel;
-  PVector acc;
-  float size;
-  float maxforce;
-  float maxspeed;
-  float angle;
-  float angleIncrement;
+  private PVector vel;
+  private PVector acc;
+  private float size;
+  private float maxForce;
+  private float maxSpeed;
+  private float angle;
+  private float angleIncrement;
   Boolean flowing = true;
   Boolean repelling = false;
   Boolean attracting = false;
   Boolean stopped = false;
   Boolean rippling = false;
   Boolean trembling = false;
-  Boolean spiralling = true;
   Boolean start = false;
-  Boolean inVortex = false;
   float ripplingSize = 0;
   float distanceFromCenter = 0;
-  float startDistance = DOME_RADIUS;
-  int trembleTime = 0;
+  private int trembleTime = 0;
   int index;
-  float radius;
 
   Particle(
       PApplet parent,
@@ -56,10 +52,9 @@ class Particle {
     size = 3;
     angle = 0;
     angleIncrement = p.random(0.005f, 0.1f);
-    maxforce = _maxforce;
-    maxspeed = _maxspeed;
+    maxForce = _maxforce;
+    maxSpeed = _maxspeed;
     index = _index;
-    radius = p.random(50, 200);
   }
 
   /**
@@ -69,7 +64,7 @@ class Particle {
    * @param _y Current position on the y axis
    * @return Float Noise angle
    */
-  float getNoiseAngle(float _x, float _y) {
+  private float getNoiseAngle(float _x, float _y) {
     return map(
         p.noise(
             _x / NOISE_MODULATION + NOISE_VARIATION,
@@ -86,9 +81,9 @@ class Particle {
     float noiseAngle = getNoiseAngle(pos.x, pos.y);
     PVector desired =
         new PVector(cos(noiseAngle) * NOISE_RESISTANCE, sin(noiseAngle) * NOISE_RESISTANCE);
-    desired.mult(maxspeed);
+    desired.mult(maxSpeed);
     PVector steer = PVector.sub(desired, vel);
-    steer.limit(maxforce);
+    steer.limit(maxForce);
     applyForce(steer);
   }
 
@@ -142,28 +137,12 @@ class Particle {
    *
    * @param _desired Vector to follow
    */
-  void follow(PVector _desired) {
+  private void follow(PVector _desired) {
     _desired.normalize();
-    _desired.mult(maxspeed);
+    _desired.mult(maxSpeed);
     PVector steer = PVector.sub(_desired, vel);
-    steer.limit(maxforce);
+    steer.limit(maxForce);
     applyForce(steer);
-  }
-
-  /** Spiral effect from the borders to the top of the dome */
-  void spiral() {
-    if (start && spiralling) {
-      angle += 0.03;
-      startDistance -= 0.3;
-      if (angle >= TWO_PI) angle = 0;
-      pos.x = startDistance * cos(angle) + p.width / 2f;
-      pos.y = startDistance * sin(angle) + p.height / 2f;
-
-      if (spiralling && startDistance < 10) {
-        spiralling = false;
-        // particleSpiral++; // TODO: Fix?
-      }
-    }
   }
 
   /** Particle falls to the closest border of the dome to end the sequence */
@@ -209,22 +188,22 @@ class Particle {
    *
    * @param _force Vector to add
    */
-  void applyForce(PVector _force) {
+  private void applyForce(PVector _force) {
     acc.add(_force);
   }
 
   /** Updates the acceleration, velocity and position vectors */
-  void update() {
+  private void update() {
     if (!stopped) {
       if (inverted) acc.mult(-1);
       vel.add(acc.x, acc.y);
-      vel.limit(maxspeed);
+      vel.limit(maxSpeed);
       pos.add(vel);
       acc.mult(0);
     }
   }
 
-  void display() {
+  private void display() {
     p.fill(colorE);
     p.noStroke();
     p.ellipse(pos.x, pos.y, size + ripplingSize, size + ripplingSize);
@@ -238,20 +217,16 @@ class Particle {
     if (distance > DOME_RADIUS) position();
   }
 
-  void borders() {
+  private void borders() {
     float distance = dist(pos.x, pos.y, p.width / 2f, p.height / 2f);
     if (distance > DOME_RADIUS) {
-      if (false) { // if (falling) { // TODO: Fix?
-        stopped = true;
-      } else {
-        /* --------Warp particles to a random location-------- */
-        // position();
+      /* --------Warp particles to a random location-------- */
+      // position();
 
-        /* --------Warp particles to opposite side-------- */
-        float theta = atan2(pos.y - p.height / 2f, pos.x - p.width / 2f);
-        pos.x = (p.width / 2f + (DOME_RADIUS * cos(theta + PI)));
-        pos.y = (p.height / 2f + (DOME_RADIUS * sin(theta + PI)));
-      }
+      /* --------Warp particles to opposite side-------- */
+      float theta = atan2(pos.y - p.height / 2f, pos.x - p.width / 2f);
+      pos.x = (p.width / 2f + (DOME_RADIUS * cos(theta + PI)));
+      pos.y = (p.height / 2f + (DOME_RADIUS * sin(theta + PI)));
     }
   }
 
