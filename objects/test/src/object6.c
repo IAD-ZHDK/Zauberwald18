@@ -50,7 +50,7 @@ void object6_setup() {
 
 double object6_loop() {
     double power = 0;
-  //  mot_set(1020);
+  // mot_set(400);
 
     int top = get_sensor(1);  //
     int bottom = get_sensor(2);  //
