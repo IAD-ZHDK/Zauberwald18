@@ -27,6 +27,8 @@ public class Sketch extends PApplet {
 
   private static final int LENGTH = 180;
 
+  private int current = 1;
+
   public void settings() {
     // set size
     size(1050, 1050, P3D); // FX2D
@@ -83,12 +85,26 @@ public class Sketch extends PApplet {
     this.pushStyle();
 
     // draw visualization
-    // viz1.draw(time, water, wind, solar);
-    // viz2.draw(time, water, wind, solar);
-    // viz3.draw(time, water, wind, solar);
-    // viz4.draw(time, water, wind, solar);
-    // viz5.draw(time, water, wind, solar);
-    viz6.draw(time, water, wind, solar);
+    switch (current) {
+      case 1:
+        viz1.draw(time, water, wind, solar);
+        break;
+      case 2:
+        viz2.draw(time, water, wind, solar);
+        break;
+      case 3:
+        viz3.draw(time, water, wind, solar);
+        break;
+      case 4:
+        viz4.draw(time, water, wind, solar);
+        break;
+      case 5:
+        viz5.draw(time, water, wind, solar);
+        break;
+      case 6:
+        viz6.draw(time, water, wind, solar);
+        break;
+    }
 
     // pop matrix and style
     this.popStyle();
@@ -104,10 +120,10 @@ public class Sketch extends PApplet {
       start = millis();
     }
 
-    // draw frame rate
+    // draw current viz and frame rate
     fill(255);
     noStroke();
-    text(frameRate, 10, 20);
+    text(current + " - " + frameRate, 10, 20);
   }
 
   public void messageReceived(String topic, byte[] payload) {
@@ -137,6 +153,23 @@ public class Sketch extends PApplet {
       default:
         // print message if not known
         println("unused message: " + topic + " - " + new String(payload));
+    }
+  }
+
+  public void keyPressed() {
+    switch (keyCode) {
+      case 37:
+        current--;
+        if (current < 1) {
+          current = 6;
+        }
+        break;
+      case 39:
+        current++;
+        if (current > 6) {
+          current = 1;
+        }
+        break;
     }
   }
 }
