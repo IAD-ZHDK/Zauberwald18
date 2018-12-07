@@ -4,9 +4,10 @@
 #include "apds.h"
 #include <art32/numbers.h>
 #include <driver/gpio.h>
-#include "neoPixelStandard.h"
+#include "light.h"
 #include "neo5.h"
 #include "servo.h"
+#include "neo3.h"
 #include <art32/smooth.h>
 #include <esp_system.h>
 
@@ -26,10 +27,19 @@ static uint8_t tower_B = 0;
 void object5_setup() {
   // init apds chip
   apds_init();
-  servo_setup(false); // one servo
-  neoPixelStandard_setup(255,200,0,29); //  this object just has 29 neopixels for ambient lighting
+
+  // init neo pixels
+  neo3_init(29, NEO3_DEFAULT_PIN); //  this object just has 29 neopixels for ambient lighting
+
+  // init lighting
+  light_init(255, 200, 0, 0, 28);
+
+  // initialize servos
+  servo_setup(false);
+
   neo5_init(NUMPIXELS, NEO5_DEFAULT_PIN);
   neo5_show(); // clear pixels
+
   // smoothing values for object output
   o1_smoothing = a32_smooth_new(20);
 // cofigure joystick
@@ -213,6 +223,7 @@ if (tower_R<redLightIntensity && tower_R<255) {
     }
 
     neo5_show();
-  neoPixelStandard(power);
+  light_set(power);
+  neo3_show();
   return power;
 }

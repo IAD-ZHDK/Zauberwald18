@@ -1,10 +1,13 @@
+import blitzkraftwerk.Visualization;
 import mqtt.MQTTClient;
-import processing.core.PApplet;
+import processing.core.*;
 
 // TODO: Check MQTT stability.
 
 public class Sketch extends PApplet {
   private MQTTClient client;
+
+  private PShape mask;
 
   private float water1;
   private float water2;
@@ -17,8 +20,14 @@ public class Sketch extends PApplet {
 
   private kenos.Visualization viz1;
   private electroswing.Visualization viz2;
+  private dedo.Visualization viz3;
+  private blitzkraftwerk.Visualization viz4;
+  private radar.Visualization viz5;
+  private wawiso.Visualization viz6;
 
   private static final int LENGTH = 180;
+
+  private int current = 1;
 
   public void settings() {
     // set size
@@ -33,13 +42,27 @@ public class Sketch extends PApplet {
     // subscribe to topics
     client.subscribe("#");
 
+    // lod mask
+    mask = loadShape("mask.svg");
+    mask.setFill(color(0,0,0));
+    mask.scale(mask.height / height);
+    mask.translate((mask.width - width) / -2, 0);
+
     // create visualizations
     viz1 = new kenos.Visualization(this);
     viz2 = new electroswing.Visualization(this);
+    viz3 = new dedo.Visualization(this);
+    viz4 = new Visualization(this);
+    viz5 = new radar.Visualization(this);
+    viz6 = new wawiso.Visualization(this);
 
     // setup visualization
     viz1.setup();
     viz2.setup();
+    viz3.setup();
+    viz4.setup();
+    viz5.setup();
+    viz6.setup();
 
     // set start
     start = millis();
@@ -61,25 +84,46 @@ public class Sketch extends PApplet {
     this.pushMatrix();
     this.pushStyle();
 
-    // TODO: Draw mask?
-
     // draw visualization
-    // this.viz1.draw(time, water, wind, solar);
-    this.viz2.draw(time, water, wind, solar);
+    switch (current) {
+      case 1:
+        viz1.draw(time, water, wind, solar);
+        break;
+      case 2:
+        viz2.draw(time, water, wind, solar);
+        break;
+      case 3:
+        viz3.draw(time, water, wind, solar);
+        break;
+      case 4:
+        viz4.draw(time, water, wind, solar);
+        break;
+      case 5:
+        viz5.draw(time, water, wind, solar);
+        break;
+      case 6:
+        viz6.draw(time, water, wind, solar);
+        break;
+    }
 
-    // pop matrix and styl
+    // pop matrix and style
     this.popStyle();
     this.popMatrix();
+
+    // draw mask
+    fill(0);
+    noStroke();
+    shape(mask, 0, 0);
 
     // reset time
     if (time >= 1) {
       start = millis();
     }
 
-    // draw frame rate
+    // draw current viz and frame rate
     fill(255);
     noStroke();
-    text(frameRate, 10, 20);
+    text(current + " - " + frameRate, 10, 20);
   }
 
   public void messageReceived(String topic, byte[] payload) {
@@ -109,6 +153,23 @@ public class Sketch extends PApplet {
       default:
         // print message if not known
         println("unused message: " + topic + " - " + new String(payload));
+    }
+  }
+
+  public void keyPressed() {
+    switch (keyCode) {
+      case 37:
+        current--;
+        if (current < 1) {
+          current = 6;
+        }
+        break;
+      case 39:
+        current++;
+        if (current > 6) {
+          current = 1;
+        }
+        break;
     }
   }
 }

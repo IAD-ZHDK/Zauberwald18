@@ -17,6 +17,8 @@ set(SOURCE_FILES
         src/apds.c
         src/enc.c
         src/enc.h
+        src/light.c
+        src/light.h
         src/main.c
         src/mot.c
         src/mot.h
@@ -26,8 +28,6 @@ set(SOURCE_FILES
         src/neo4.h
         src/neo5.c
         src/neo5.h
-        src/neoPixelStandard.c
-        src/neoPixelStandard.h
         src/object1.h
         src/object1.c
         src/object2.h
@@ -41,7 +41,7 @@ set(SOURCE_FILES
         src/object6.h
         src/object6.c
         src/servo.h
-        src/servo.c src/neo5.c src/neo5.h src/object6.h src/object6.c)
+        src/servo.c)
 
 # create a fake library target
 add_library(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
