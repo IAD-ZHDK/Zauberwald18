@@ -12,9 +12,7 @@ class Particle {
   private static final float NOISE_RESISTANCE = 100;
   int colorE;
   PVector pos;
-  Boolean flowing = true;
   Boolean start = false;
-  float ripplingSize = 0;
   int index;
   private PApplet p;
   private PVector vel;
@@ -27,8 +25,8 @@ class Particle {
       PApplet parent,
       float _x,
       float _y,
-      float _maxspeed,
-      float _maxforce,
+      float _maxSpeed,
+      float _maxForce,
       int _index,
       int colorE) {
     p = parent;
@@ -38,18 +36,11 @@ class Particle {
     vel = new PVector(0, 0);
     acc = new PVector(0, 0);
     size = 3;
-    maxForce = _maxforce;
-    maxSpeed = _maxspeed;
+    maxForce = _maxForce;
+    maxSpeed = _maxSpeed;
     index = _index;
   }
 
-  /**
-   * Calculates the noise angle in a given position
-   *
-   * @param _x Current position on the x axis
-   * @param _y Current position on the y axis
-   * @return Float Noise angle
-   */
   private float getNoiseAngle(float _x, float _y) {
     return map(
         p.noise(
@@ -62,7 +53,6 @@ class Particle {
         TWO_PI * 2);
   }
 
-  /** Sets acceleration to follow the noise flow */
   void flow() {
     float noiseAngle = getNoiseAngle(pos.x, pos.y);
     PVector desired =
@@ -73,16 +63,10 @@ class Particle {
     applyForce(steer);
   }
 
-  /**
-   * Adds a vector to the current acceleration
-   *
-   * @param _force Vector to add
-   */
   private void applyForce(PVector _force) {
     acc.add(_force);
   }
 
-  /** Updates the acceleration, velocity and position vectors */
   private void update() {
     vel.add(acc.x, acc.y);
     vel.limit(maxSpeed);
@@ -93,7 +77,7 @@ class Particle {
   private void display() {
     p.fill(colorE);
     p.noStroke();
-    p.ellipse(pos.x, pos.y, size + ripplingSize, size + ripplingSize);
+    p.ellipse(pos.x, pos.y, size, size);
   }
 
   void position() {
@@ -107,17 +91,13 @@ class Particle {
   private void borders() {
     float distance = dist(pos.x, pos.y, p.width / 2f, p.height / 2f);
     if (distance > DOME_RADIUS) {
-      /* --------Warp particles to a random location-------- */
-      // position();
-
-      /* --------Warp particles to opposite side-------- */
       float theta = atan2(pos.y - p.height / 2f, pos.x - p.width / 2f);
       pos.x = (p.width / 2f + (DOME_RADIUS * cos(theta + PI)));
       pos.y = (p.height / 2f + (DOME_RADIUS * sin(theta + PI)));
     }
   }
 
-  void run() {
+  void draw() {
     update();
     borders();
     display();

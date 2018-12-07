@@ -13,13 +13,9 @@ public class Visualization {
   private ArrayList<Particle> particlesSolar = new ArrayList<>();
   private ArrayList<City> cities = new ArrayList<>();
 
-  private int particleNumSolar = 850; // 7
-  private int particleNumWind = 250; // 5
-  private int particleNumWater = 3900; // 5
-
-  private int particleSpiral = 0;
-
-  private Boolean initializing = false;
+  private static final int PARTICLE_NUM_SOLAR = 850; // 7
+  private static final int PARTICLE_NUM_WIND = 250; // 5
+  private static final int PARTICLE_NUM_WATER = 3900; // 5
 
   private PApplet p;
 
@@ -29,7 +25,7 @@ public class Visualization {
   }
 
   public void setup() {
-    for (int i = 0; i < particleNumWater; i++) {
+    for (int i = 0; i < PARTICLE_NUM_WATER; i++) {
       particlesWater.add(
           new Particle(
               p,
@@ -41,7 +37,7 @@ public class Visualization {
               p.color(255)));
     }
 
-    for (int i = 0; i < particleNumSolar; i++) {
+    for (int i = 0; i < PARTICLE_NUM_SOLAR; i++) {
       particlesSolar.add(
           new Particle(
               p,
@@ -53,7 +49,7 @@ public class Visualization {
               p.color(255)));
     }
 
-    for (int i = 0; i < particleNumWind; i++) {
+    for (int i = 0; i < PARTICLE_NUM_WIND; i++) {
       particlesWind.add(
           new Particle(
               p,
@@ -111,25 +107,13 @@ public class Visualization {
         }
       }
 
-      if (_p.flowing) _p.flow();
-
-      if (initializing && particleSpiral > particleNumSolar - 10) {
-        initializing = false;
-        _p.flowing = true;
-      }
+      _p.flow();
 
       if (p.millis() % ((_p.index * 5) + 1) == 0 && !_p.start) {
         _p.start = true;
       }
 
-      _p.flowing = true;
-      _p.ripplingSize = 0;
-
-      if (initializing) {
-        _p.run();
-        initializing = false;
-      }
-      _p.run();
+      _p.draw();
     }
     for (Particle _p : particlesWater) {
       if (water > 0) {
@@ -142,26 +126,14 @@ public class Visualization {
         }
       }
 
-      if (_p.flowing) _p.flow();
+      _p.flow();
 
-      if (initializing && particleSpiral > particleNumWater - 10) {
-        initializing = false;
-        _p.flowing = true;
-      }
 
       if (p.millis() % ((_p.index * 5) + 1) == 0 && !_p.start) {
         _p.start = true;
       }
 
-      _p.flowing = true;
-      _p.ripplingSize = 0;
-
-      if (initializing) {
-        // p.emit();
-        _p.run();
-        initializing = false;
-      }
-      _p.run();
+      _p.draw();
     }
 
     for (Particle _p : particlesWind) {
@@ -174,30 +146,17 @@ public class Visualization {
           _p.position();
         }
       }
-      if (_p.flowing) _p.flow();
-
-      if (initializing && particleSpiral > particleNumWind - 10) {
-        initializing = false;
-        _p.flowing = true;
-      }
+      _p.flow();
 
       if (p.millis() % ((_p.index * 5) + 1) == 0 && !_p.start) {
         _p.start = true;
       }
 
-      _p.flowing = true;
-      _p.ripplingSize = 0;
-
-      if (initializing) {
-        _p.run();
-        initializing = false;
-      }
-
-      _p.run();
+      _p.draw();
     }
 
     for (City c : cities) {
-      c.drawCity(water, solar, wind);
+      c.draw(water, solar, wind);
     }
   }
 }

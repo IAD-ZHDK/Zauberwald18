@@ -40,7 +40,7 @@ class City {
     }
   }
 
-  void drawCity(float water, float solar, float wind) {
+  void draw(float water, float solar, float wind) {
     center_gravity.x = pos.x;
     center_gravity.y = pos.y;
     update();
