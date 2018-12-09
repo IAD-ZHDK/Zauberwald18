@@ -10,25 +10,23 @@ import static processing.core.PApplet.*;
 // TODO: Cleanup.
 
 class Curve {
-  PApplet p;
-
-  PVector[] points;
-  int C;
-  float colorChange = 255;
   int A;
-  int offSet = 160;
-  ArrayList<Segment> sList;
+  private PApplet p;
+  private int C;
+  private float colorChange = 255;
+  private int offSet = 160;
+  private ArrayList<Segment> sList;
 
-  float speed = 1;
-  int m = 6;
-  int[] months = new int[m];
-  int totalMonth;
-  int end = 0;
+  private float speed = 1;
+  private int m = 6;
+  private int[] months = new int[m];
+  private int totalMonth;
+  private int end = 0;
 
-  float Off = 0;
-  int speedOff = 4;
-  float maxOff = 0;
-  String id;
+  private float Off = 0;
+  private int speedOff = 4;
+  private float maxOff = 0;
+  private String id;
 
   Curve(PApplet parent, TableRow r, float max, int c, int a, String st) {
     p = parent;
@@ -37,22 +35,22 @@ class Curve {
     sList = new ArrayList<>();
 
     for (int i = 0; i < r.getColumnCount() - 1; i++) {
-      float ymin = map(r.getFloat(i), 0, max, 0, p.height / 2);
+      float ymin = map(r.getFloat(i), 0, max, 0, p.height / 2f);
       float xmin =
           map(
               i + 1,
               0,
               r.getColumnCount(),
               (p.width / 2) - (p.height / 2) - offSet,
-              (p.width / 2) + (p.height / 2));
-      float ymax = map(r.getFloat(i + 1), 0, max, 0, p.height / 2);
+              (p.width / 2f) + (p.height / 2f));
+      float ymax = map(r.getFloat(i + 1), 0, max, 0, p.height / 2f);
       float xmax =
           map(
               i + 2,
               0,
               r.getColumnCount(),
               (p.width / 2) - (p.height / 2) - offSet,
-              (p.width / 2) + (p.height / 2));
+              (p.width / 2f) + (p.height / 2f));
       sList.add(new Segment(p, xmin, xmax, ymin, ymax));
     }
 
@@ -64,9 +62,14 @@ class Curve {
     for (int i = m - 1; i >= 0; i--) {
       months[i] = i;
       sList.get(i).minX =
-          map(i, 0, m, (p.width / 2) - (p.height / 2) - offSet, (p.width / 2) + (p.height / 2));
+          map(i, 0, m, (p.width / 2) - (p.height / 2) - offSet, (p.width / 2f) + (p.height / 2f));
       sList.get(i).maxX =
-          map(i + 1, 0, m, (p.width / 2) - (p.height / 2) - offSet, (p.width / 2) + (p.height / 2));
+          map(
+              i + 1,
+              0,
+              m,
+              (p.width / 2) - (p.height / 2) - offSet,
+              (p.width / 2f) + (p.height / 2f));
     }
   }
 
@@ -79,17 +82,17 @@ class Curve {
     for (int j = 0; j < months.length; j++) {
       int i = months[j];
       // if(j>0){sList.get(i).minY=lastmax;}
-      float scale = map(sList.get(i).minX, (p.width / 2) - (p.height / 2), p.width / 2, 0, 1);
+      float scale = map(sList.get(i).minX, (p.width / 2f) - (p.height / 2f), p.width / 2f, 0, 1);
       if (sList.get(i).minX - 100 > p.width / 2) {
-        scale = map(sList.get(i).minX, p.width / 2, (p.width / 2) + (p.height / 2), 1, 0);
+        scale = map(sList.get(i).minX, p.width / 2f, (p.width / 2f) + (p.height / 2f), 1, 0);
       }
-      float ymin = sList.get(i).minY * sin(radians(A)) * scale + p.height / 2;
+      float ymin = sList.get(i).minY * sin(radians(A)) * scale + p.height / 2f;
 
-      float scale2 = map(sList.get(i).maxX, (p.width / 2) - (p.height / 2), p.width / 2, 0, 1);
+      float scale2 = map(sList.get(i).maxX, (p.width / 2f) - (p.height / 2f), p.width / 2f, 0, 1);
       if (sList.get(i).maxX > p.width / 2) {
-        scale2 = map(sList.get(i).maxX, p.width / 2, (p.width / 2) + (p.height / 2), 1, 0);
+        scale2 = map(sList.get(i).maxX, p.width / 2f, (p.width / 2f) + (p.height / 2f), 1, 0);
       }
-      float ymax = sList.get(i).maxY * sin(radians(A)) * scale2 + p.height / 2;
+      float ymax = sList.get(i).maxY * sin(radians(A)) * scale2 + p.height / 2f;
       // if(i%2==0){Off=-1*Off;}
       if (j == 0) {
         sList.get(i).display(ymin, ymax, Off, (int) maxOff / 12);
@@ -124,7 +127,7 @@ class Curve {
     }
   }
 
-  void off() {
+  private void off() {
     if (Off >= maxOff) {
       speedOff = (int) p.random(-3, -5);
     }
@@ -141,13 +144,13 @@ class Curve {
     }
   }
 
-  void next() {
-    // println("eeee");
+  private void next() {
     if (end == totalMonth - 1) {
       end = 0;
     } else {
       end++;
     }
+
     int next = end;
     for (int i = m - 1; i >= 0; i--) {
       months[i] = next;
@@ -164,7 +167,7 @@ class Curve {
     }
   }
 
-  void rot() {
+  private void rot() {
     if (A < 360) {
       A++;
     } else {

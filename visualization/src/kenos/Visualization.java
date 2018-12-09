@@ -17,11 +17,6 @@ public class Visualization {
   private Rings ringRain;
   private Rings ringSun;
 
-  // TODO: Smoothing.
-  // TODO: User Input (animate Consumptions).
-  // TODO: Bigger Circle in the middle.
-  // TODO: Images => Poster.
-
   public Visualization(PApplet parent) {
     // set parent
     this.p = parent;
