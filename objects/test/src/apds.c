@@ -109,8 +109,8 @@ void apds_init() {
   // set config one (no wait)
   apds_write_byte(0x8D, 0x60);
 
-  // set color gain to 4x
-  apds_write_byte(0x8F, 0x1);
+  // set color gain to 64x
+  apds_write_byte(0x8F, 0x3);
 
   // set config two
   apds_write_byte(0x90, 0x1);
