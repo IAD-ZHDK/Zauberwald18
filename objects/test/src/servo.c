@@ -17,7 +17,7 @@ float m_full_duty = (1 << LEDC_TIMER_15_BIT) - 1;
 
 static uint32_t servo_angle_to_duty(double angle) {
   // calculate pulse width
-  double width = a32_safe_map_d(180-angle, 0, SERVO_MAX_ANGLE, SERVO_DUTY_MIN_US, SERVO_DUTY_MAX_US);
+  double width = a32_safe_map_d(angle, 0, SERVO_MAX_ANGLE, SERVO_DUTY_MIN_US, SERVO_DUTY_MAX_US);
   return m_full_duty * ((int)width) / (SERVO_SEC_TO_US / SERVO_LEDC_INIT_FREQ);
 }
 
