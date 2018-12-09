@@ -5,7 +5,7 @@ void object2_setup();
 double object2_loop();
 int mountainX(int mx, int my, int x, int y);
 int mountainY(int mx, int my, int x, int y);
-void setcol();
+void setcolor();
 void create();
 bool out();
 void next();

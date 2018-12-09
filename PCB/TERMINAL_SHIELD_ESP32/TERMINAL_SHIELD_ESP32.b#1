@@ -185,8 +185,8 @@
 <text x="61.16625" y="10.67561875" size="0.762" layer="21" font="vector" ratio="15" rot="R90">5v</text>
 <text x="61.316109375" y="5.209540625" size="0.762" layer="21" font="vector" ratio="15" rot="R90">12v</text>
 <text x="62.384178125" y="5.21133125" size="0.762" layer="21" font="vector" ratio="15" rot="R90">MOTOR POWER</text>
-<text x="75.5802375" y="34.124390625" size="0.762" layer="21" font="vector" ratio="15">CLK</text>
-<text x="75.3262375" y="30.314390625" size="0.762" layer="21" font="vector" ratio="15">SDO</text>
+<text x="75.5802375" y="30.314390625" size="0.762" layer="21" font="vector" ratio="15">CLK</text>
+<text x="75.3262375" y="34.124390625" size="0.762" layer="21" font="vector" ratio="15">SDO</text>
 <text x="75.3262375" y="26.504390625" size="0.762" layer="21" font="vector" ratio="15">14</text>
 <text x="75.3262375" y="22.694390625" size="0.762" layer="21" font="vector" ratio="15">26</text>
 <text x="75.3262375" y="18.884390625" size="0.762" layer="21" font="vector" ratio="15">27</text>

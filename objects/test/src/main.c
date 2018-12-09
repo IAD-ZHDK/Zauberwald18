@@ -40,7 +40,7 @@ static void loop() {
       break;
   }
 
- // naos_log("power%f",power);
+ //naos_log("power%f",power);
 
   // check if power changed
   if (new_power != power) {

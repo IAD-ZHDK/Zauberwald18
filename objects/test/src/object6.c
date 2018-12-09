@@ -6,8 +6,15 @@
 #include "light.h"
 #include "neo3.h"
 #include <driver/adc.h>
+#include <art32/smooth.h>
+
 //sensor QRD1114
 double power = 0;
+
+static a32_smooth_t* o1_smoothing;
+static a32_smooth_t* o2_smoothing;
+
+
 
 static int get_sensor(int n) {
     switch (n) {
@@ -29,7 +36,8 @@ static int get_sensor(int n) {
 void object6_setup() {
     // initialize neo pixel
  //    neoPixelStandard_setup(0,100,255,0,24); //
-
+    o1_smoothing = a32_smooth_new(20); // sensor 1
+    o2_smoothing = a32_smooth_new(20);; // sensor 2
     // init neo pixels
     neo3_init(24, NEO3_DEFAULT_PIN); //
 
@@ -60,21 +68,25 @@ void object6_setup() {
 double object6_loop() {
 
 
-// todo add smoothing 
+// todo add smoothing -
     int top = get_sensor(1);  //
+    top = a32_smooth_update(o1_smoothing, top);
     int bottom = get_sensor(2);  //
-        if ((top < 14 || bottom < 14) && power<.98)  {
-            power += .1;
-        } else if (power>0) {
-            power-= .1;
+    bottom = a32_smooth_update(o2_smoothing, bottom);
+        if ((top < 60 || bottom < 18) && power<.95)  { // top sensor has a higher baseline
+            power += .05;
+        } else if (power>.05) {
+            power-= .05;
         }
 
-    int motorSpeed = (int)floor(a32_safe_map_d(power, 0, 1, 0, 1023));
+   int motorSpeed = (int)floor(a32_safe_map_d(power, 0, 1, 0, 1023));
+ //   int motorSpeed = 500;
     if (motorSpeed < 100)  { // with less than 300 the dc motors don't rotate
         motorSpeed = 0;
     }
     mot_set(motorSpeed);
-     naos_log("top: %d, bottom: %d, power: %f", top, bottom, power);
+    naos_log("top: %d, bottom: %d, power: %f", top, bottom, power);
+
     //
 
     //  // read anemometer rate

@@ -6,7 +6,6 @@
 #include <esp_system.h>
 #include <math.h>
 #include <naos.h>
-
 #include "anemometer.h"
 #include "apa.h"
 #include "object2.h"
@@ -26,8 +25,9 @@ int x;
 int y;
 int countRe;
 int pixels[NUMPIXELS] = {};
-double pixelsBackgroundAnim[NUMPIXELS] = {};
-uint32_t colors[NUMPIXELS] = {};
+float pixelsBackgroundAnim[NUMPIXELS] = {}; // angle for sin wave animation
+uint8_t backgroundColors[NUMPIXELS] = {}; // angle for sin wave animation
+uint32_t colors[NUMPIXELS] = {}; //
 uint32_t red;
 uint32_t green;
 uint32_t blue;
@@ -45,18 +45,15 @@ void object2_setup() {
   // init apa pixels
   apa_init(NUMPIXELS, APA_DEFAULT_CLOCK_PIN, APA_DEFAULT_DATA_PIN);
 // setup background animation
-
     for (int i = 0; i < NUMPIXELS; i++) {
         pixelsBackgroundAnim[i] = i;
     }
+
+
 }
 
 
 double object2_loop() {
-  // set pixels
-  //apa_set_one(0,0, 0, 255);
-  //apa_show();
-  //
   // read anemometer rate
   double input = a32_constrain_d(anemo_get(), 0, 5);
   // smooth rate
@@ -64,7 +61,7 @@ double object2_loop() {
   // calculate power
    power = a32_safe_map_d(input, .6, 5, 0, 1);
 
-  if (power > .4) {  //todo: need to check this value
+  if (power > .4 && start == false) {  //todo: need to check this value
     start = true;
    // naos_log("Ss");
   }
@@ -86,18 +83,27 @@ double object2_loop() {
                  active = true;
               }
         }
+
     if (!active) {
-        pixelsBackgroundAnim[i] += .01;
-        int color = 7 + floor(6 * sin(pixelsBackgroundAnim[i]));
-        double fadeDown = a32_safe_map_d(power, 0, .4, 0, color);;
+        pixelsBackgroundAnim[i] += .04;
+        int color = 60 + floor(50 * sin(pixelsBackgroundAnim[i])); // somewhere between 20 and and 110
+        double fadeDown = a32_safe_map_d(power, 0, .4, 0, color/2); // subtract power
         color = color-fadeDown;
+        //uint32_t c = colors[i];
+        // naos_log("power%d", c);
+
+        uint8_t  R = color;//c  >> 16;
+        uint8_t  G = 0;
+        uint8_t  B = color;
+        backgroundColors[i] = color;
         if (colors[i] == 0) {
-            apa_set_one(i, color, 0, color);
+         //   colors == R+G+B;
+           apa_set_one(i, R, G, B);
         }
     }
 }
 //
-    apa_show();
+apa_show();
   return power;
 }
 void create() {
@@ -201,7 +207,6 @@ int mountainY(int mx, int my, int x, int y) {
       return 1;
     }
   }
-
   else {
     return 2;
   }
@@ -212,33 +217,36 @@ void animate() {
   if (index01 < lengthOfImpulse) {
     int p = pixel(index01);
     uint32_t c = color(index01);
-    int  R = 0;//c  >> 16;
-    int  G = (c  >> 8) & 0xff;
-    int  B = c  & 0xff;
+    uint8_t  R = backgroundColors[p];//c  >> 16;
+    uint8_t  G = (c  >> 8) & 0xff;
+    uint8_t  B = c  & 0xff;
+    if (B+backgroundColors[p]<254) {
+        B += backgroundColors[p];
+    }
     apa_set_one(p,R,G,B);
     index01++;
   } else {
     index01 = 0;
-    setcol();
+    setcolor();
   }
 
 }
 
-void setcol() {
+void setcolor() {
   if (countRe >= lengthOfImpulse && lengthOfImpulse > 3) {
-    Ireset = true;
+    Ireset = true; // animation over
   }
     red = 0x000000;
   for (int i = lengthOfImpulse - 1; i >= 0; i--) {
-    if (green > 0x000600) {
+    if (green > 0x000500) {//fade green first
       green -= 0x000500;
-      blue += 0x000005;
-          } else if (power > .4) {  //todo: need to check this value
+    //  blue += 0x000005;
+  //  } else if (power > .4) {  //todo: need to check this value
+    //  green = 0x000000;
+    //  blue = 0x0000FF;
+    } else if (blue > 0x00010) {//fade blue
       green = 0x000000;
-      blue = 0x0000FF;
-    } else if (blue > 0x00006) {
-      green = 0x000000;
-      blue -= 0x00005;
+      blue -= 0x00010;
     } else {
       green = 0x000000;
       blue = 0x000000;
@@ -246,6 +254,7 @@ void setcol() {
     }
     colors[i] = red + green + blue;
   }
+
 }
 
 void reset(int ix, int iy) {
