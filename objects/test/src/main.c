@@ -57,7 +57,7 @@ static void loop() {
 }
 
 static naos_param_t params[] = {
-    {.name = "object-number", .type = NAOS_LONG, .default_l = 0},
+    {.name = "object-number", .type = NAOS_LONG, .default_l = 0}, // require reboot
     {.name = "multiplier", .type = NAOS_DOUBLE, .default_d = 1.0, .sync_d = &multiplier},
     {.name = "light-base", .type = NAOS_DOUBLE, .default_d = 0.2, .sync_d = &light_base},
     {.name = "light-amplitude", .type = NAOS_DOUBLE, .default_d = 0.4, .sync_d = &light_amplitude},
@@ -75,7 +75,7 @@ void app_main() {
   naos_init(&config);
 
   // get selected object
-  object_number = naos_get_l("Object-Number");
+  object_number = naos_get_l("object-number");
 
   // run object setup
   switch (object_number) {
