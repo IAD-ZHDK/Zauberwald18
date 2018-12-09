@@ -11,6 +11,8 @@ void neo5_init(int length, gpio_num_t pin);
 
 void neo5_set_one(int i, uint8_t r, uint8_t g, uint8_t b);
 
+void neo5_set_range(uint8_t r, uint8_t g, uint8_t b, int first, int last);
+
 void neo5_set_all(uint8_t r, uint8_t g, uint8_t b);
 
 void neo5_show();

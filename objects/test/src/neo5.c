@@ -51,10 +51,14 @@ void neo5_set_one(int i, uint8_t r, uint8_t g, uint8_t b) {
     neo5_pixels[i].b = b;
 }
 
-void neo5_set_all(uint8_t r, uint8_t g, uint8_t b) {
-    for (int i = 0; i < neo5_length; i++) {
+void neo5_set_range(uint8_t r, uint8_t g, uint8_t b, int first, int last) {
+    for (int i = first; i <= last; i++) {
         neo5_set_one(i, r, g, b);
     }
+}
+
+void neo5_set_all(uint8_t r, uint8_t g, uint8_t b) {
+    neo5_set_range(r, g, b, 0, neo5_length-1);
 }
 
 void neo5_show() {
