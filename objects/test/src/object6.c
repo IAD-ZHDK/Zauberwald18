@@ -3,9 +3,11 @@
 #include "mot.h"
 #include <art32/numbers.h>
 #include <driver/gpio.h>
-#include "neoPixelStandard.h"
+#include "light.h"
+#include "neo3.h"
 #include <driver/adc.h>
 //sensor QRD1114
+double power = 0;
 
 static int get_sensor(int n) {
     switch (n) {
@@ -26,7 +28,14 @@ static int get_sensor(int n) {
 
 void object6_setup() {
     // initialize neo pixel
-     neoPixelStandard_setup(0,100,255,24); //
+ //    neoPixelStandard_setup(0,100,255,0,24); //
+
+    // init neo pixels
+    neo3_init(24, NEO3_DEFAULT_PIN); //
+
+    // init lighting
+    light_init(0,100,255,0,24);
+
     mot_init(false);
 
     //  // smoothing values for object output
@@ -49,13 +58,23 @@ void object6_setup() {
 }
 
 double object6_loop() {
-    double power = 0;
-  // mot_set(400);
 
+
+// todo add smoothing 
     int top = get_sensor(1);  //
     int bottom = get_sensor(2);  //
+        if ((top < 14 || bottom < 14) && power<.98)  {
+            power += .1;
+        } else if (power>0) {
+            power-= .1;
+        }
 
-     naos_log("top: %d, bottom: %d", top, bottom);
+    int motorSpeed = (int)floor(a32_safe_map_d(power, 0, 1, 0, 1023));
+    if (motorSpeed < 100)  { // with less than 300 the dc motors don't rotate
+        motorSpeed = 0;
+    }
+    mot_set(motorSpeed);
+     naos_log("top: %d, bottom: %d, power: %f", top, bottom, power);
     //
 
     //  // read anemometer rate
@@ -79,7 +98,10 @@ double object6_loop() {
     //  neoPixelStandard(power);
     //
 
-    neoPixelStandard(power);
+    // set neo pixel
+    light_set(power);
+    neo3_show();
+
     return power;
 }
 
