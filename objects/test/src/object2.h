@@ -1,5 +1,7 @@
 // wind: Chen_Lopez
 
+#include <stdbool.h>
+
 void object2_setup();
 
 double object2_loop();
