@@ -63,9 +63,9 @@ void object6_setup() {
 
 double object6_loop(double light_base, double light_amplitude) {
   int top = get_sensor(1);  //
-  top = a32_smooth_update(o1_smoothing, top);
+  top = (int)a32_smooth_update(o1_smoothing, top);
   int bottom = get_sensor(2);  //
-  bottom = a32_smooth_update(o2_smoothing, bottom);
+  bottom = (int)a32_smooth_update(o2_smoothing, bottom);
   if ((top < 60 || bottom < 17) && power < .99) {  // top sensor has a higher baseline
     power += .01;
   } else if (power > .01) {

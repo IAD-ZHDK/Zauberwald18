@@ -14,12 +14,10 @@
 static a32_smooth_t* o1_smoothing;
 
 static int servo_horizontal = 90;
-
 static int servo_horizontal_limit_high = 180;
 static int servo_horizontal_limit_low = 0;
 
 static int servo_vertical = 90;
-
 static int servo_vertical_limit_high = 160;
 static int servo_vertical_limit_low = 30;
 
@@ -142,14 +140,16 @@ double object3_loop(double light_base, double light_amplitude) {
     }
   }
 
-  float power = avt + avd + avl + avr;
+  double power = avt + avd + avl + avr;
   power = power / 4;
   power = power / 400.0;
   if (power > 1) {
     power = 1;
   }
+
   power = a32_smooth_update(o1_smoothing, power);
   light_set(power, light_base, light_amplitude);
   neo3_show();
+
   return power;
 }
