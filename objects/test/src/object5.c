@@ -211,11 +211,14 @@ double object5_loop() {
   }
 
   // slowly apply power
-  if(current_power > power + POWER_APPLY_RATE) {
+  if(current_power > power) {
     power += POWER_APPLY_RATE;
-  } else if(current_power < power - POWER_APPLY_RATE) {
+  } else if(current_power <= power) {
     power -= POWER_APPLY_RATE;
   }
+
+  // check power bounds
+  power = a32_constrain_d(power, 0, 1);
 
   // set tower light
   neo5_set_range((uint8_t)(power * 200), (uint8_t)(power * 150), 0, 4, NUM_PIXELS-1);
