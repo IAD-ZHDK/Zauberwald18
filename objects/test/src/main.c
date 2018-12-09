@@ -7,13 +7,16 @@
 #include "object5.h"
 #include "object6.h"
 
-// TODO: Run loop also when offline?
+#define PUBLISH_INTERVAL 30
 
 static long object_number = 0;
-static double power;
+static double multiplier = 1;
+
+static double last_power;
+static uint32_t last_publish;
 
 static void loop() {
-  // prepare power
+  // prepare last_power
   double new_power = 0;
 
   // run object code
@@ -40,25 +43,28 @@ static void loop() {
       break;
   }
 
- //naos_log("power%f",power);
+  // multiply
+  last_power *= multiplier;
 
   // check if power changed
-  if (new_power != power) {
+  if (new_power != last_power && naos_millis() > last_publish + PUBLISH_INTERVAL) {
     naos_publish_d("value", new_power, 0, false, NAOS_LOCAL);
-    power = new_power;
+    last_power = new_power;
+    last_publish = naos_millis();
   }
 }
 
 static naos_param_t params[] = {
     {.name = "Object-Number", .type = NAOS_LONG, .default_l = 0},
+    {.name = "Multiplier", .type = NAOS_DOUBLE, .default_d = 1},
 };
 
-static naos_config_t config = {.device_type = "test",
+static naos_config_t config = {.device_type = "zw18",
                                .firmware_version = "0.1.0",
                                .loop_callback = loop,
                                .loop_interval = 20,
                                .parameters = params,
-                               .num_parameters = 1};
+                               .num_parameters = 2};
 
 void app_main() {
   // initialize naos

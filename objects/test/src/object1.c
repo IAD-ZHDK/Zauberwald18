@@ -1,4 +1,4 @@
-// Wind (Schneesturm): Duarte, Prantl, Weber
+// Wind 1 (Schneesturm): Duarte, Prantl, Weber
 
 #include <art32/numbers.h>
 #include <art32/smooth.h>
@@ -35,13 +35,13 @@ void object1_setup() {
 
 double object1_loop() {
   // read anemometer rate
-  double rate = a32_constrain_d(anemo_get(), 0, 5.5);
+  double rate = a32_constrain_d(anemo_get(), 0, 5);
 
   // smooth rate
   rate = a32_smooth_update(o1_smoothing, rate);
 
   // calculate motor speed
-  int motorSpeed = (int)floor(a32_safe_map_d(rate, 0, 6, 0, 1023));
+  int motorSpeed = (int)floor(a32_safe_map_d(rate, 0.25, 5, 0, 1023));
   if (motorSpeed < 300)  { // with less than 300 the dc motors don't rotate
     motorSpeed = 0;
   }
@@ -50,7 +50,7 @@ double object1_loop() {
   mot_set(motorSpeed);
 
   // calculate power
-  double power = a32_safe_map_d(rate, .6, 10, 0, 1);
+  double power = a32_safe_map_d(rate, 0.25, 5, 0, 1);
 
   // set neo pixel
   light_set(power);
