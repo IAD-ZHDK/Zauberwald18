@@ -6,15 +6,12 @@
 #include <esp_system.h>
 #include <driver/gpio.h>
 
-#include "apds.h"
 #include "light.h"
 #include "neo5.h"
 #include "servo.h"
 #include "neo3.h"
 
 #define NUM_PIXELS 11
-
-static a32_smooth_t *o1_smoothing;
 
 static uint8_t servoPos = 90;
 static uint8_t servoMax = 160;
@@ -27,9 +24,6 @@ static uint8_t tower_G = 0;
 static uint8_t tower_B = 0;
 
 void object5_setup() {
-  // init apds chip
-  apds_init();
-
   // init neo pixels
   neo3_init(29, NEO3_DEFAULT_PIN); // this object just has 29 neopixels for ambient lighting
 
@@ -42,9 +36,6 @@ void object5_setup() {
   // initialize tower pixels and clear pixels
   neo5_init(NUM_PIXELS, NEO5_DEFAULT_PIN);
   neo5_show();
-
-  // smoothing values for object output
-  o1_smoothing = a32_smooth_new(20);
 
   // configure joystick
   ESP_ERROR_CHECK(gpio_set_direction(GPIO_NUM_32, GPIO_MODE_INPUT));
@@ -102,16 +93,8 @@ void object5_setup() {
 }
 
 double object5_loop() {
-  // read red light
-  apds_color_t c = apds_read();
 
-  naos_log("%d - %d", c.r, c.c);
-
-  // calculate power (taking into account that there is red light in ambient light)
-  double red_light = (double)(c.r+1) / (double)(c.c+1);
-
-  // mapping red light
-  double power = a32_smooth_update(o1_smoothing, a32_safe_map_d(red_light, .3, .6, 0, 1));
+  double power = 0;
 
   // set up tower glow
   uint16_t tower_red_light = (uint16_t) a32_safe_map_d(power, 0, 1, 0, 500);
