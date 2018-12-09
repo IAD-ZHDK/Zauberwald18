@@ -30,7 +30,6 @@ void servo_setup(bool two_servos) {
   t.timer_num = SERVO_TIMER;
   ESP_ERROR_CHECK(ledc_timer_config(&t));
 
-
   if (!two_servos) {
     //  5volt logic pins are used up for object 5, so need to use a 3.3 pin here
     ledc_channel_config_t ch1;

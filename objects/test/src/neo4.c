@@ -57,9 +57,7 @@ void neo4_set_range(int start, int end, uint8_t r, uint8_t g, uint8_t b, uint8_t
   }
 }
 
-void neo4_set_all(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-  neo4_set_range(0, neo4_length-1, r, g, b, w);
-}
+void neo4_set_all(uint8_t r, uint8_t g, uint8_t b, uint8_t w) { neo4_set_range(0, neo4_length - 1, r, g, b, w); }
 
 void neo4_show() {
   // prepare iterator

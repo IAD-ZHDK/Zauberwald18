@@ -31,15 +31,15 @@ double anemo_get() {
   return rate;
 }
 
-  void anemo_init(uint8_t pinSelect) {
-    gpio_num_t pin = GPIO_NUM_33;
+void anemo_init(uint8_t pinSelect) {
+  gpio_num_t pin = GPIO_NUM_33;
 
-    gpio_config_t rc;
-    rc.pin_bit_mask = GPIO_SEL_33; //
-    if (pinSelect == 1) {
-      pin = GPIO_NUM_19;
-      rc.pin_bit_mask = GPIO_SEL_19; //
-    }
+  gpio_config_t rc;
+  rc.pin_bit_mask = GPIO_SEL_33;  //
+  if (pinSelect == 1) {
+    pin = GPIO_NUM_19;
+    rc.pin_bit_mask = GPIO_SEL_19;  //
+  }
   // configure rotation pin
   rc.mode = GPIO_MODE_INPUT;
   rc.intr_type = GPIO_INTR_NEGEDGE;  // only on falling edge

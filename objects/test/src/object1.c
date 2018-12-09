@@ -7,8 +7,8 @@
 #include <naos.h>
 
 #include "anemometer.h"
-#include "mot.h"
 #include "light.h"
+#include "mot.h"
 #include "neo3.h"
 
 static a32_smooth_t* o1_smoothing;
@@ -30,7 +30,7 @@ void object1_setup() {
   neo3_init(36, NEO3_DEFAULT_PIN);
 
   // init lighting
-  light_init(254, 0, 254, 0, 35); // magenta
+  light_init(254, 0, 254, 0, 35);  // magenta
 }
 
 double object1_loop() {
@@ -42,7 +42,7 @@ double object1_loop() {
 
   // calculate motor speed
   int motorSpeed = (int)floor(a32_safe_map_d(rate, 0.25, 5, 0, 1023));
-  if (motorSpeed < 300)  { // with less than 300 the dc motors don't rotate
+  if (motorSpeed < 300) {  // with less than 300 the dc motors don't rotate
     motorSpeed = 0;
   }
 

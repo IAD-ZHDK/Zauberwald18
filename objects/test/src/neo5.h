@@ -4,7 +4,7 @@
 #define NEO5_DEFAULT_PIN GPIO_NUM_15
 
 typedef struct {
-    uint8_t r, g, b;
+  uint8_t r, g, b;
 } neo5_pixel_t;
 
 void neo5_init(int length, gpio_num_t pin);

@@ -57,9 +57,7 @@ void neo3_set_range(uint8_t r, uint8_t g, uint8_t b, int first, int last) {
   }
 }
 
-void neo3_set_all(uint8_t r, uint8_t g, uint8_t b) {
-  neo3_set_range(r, g, b, 0, neo3_length-1);
-}
+void neo3_set_all(uint8_t r, uint8_t g, uint8_t b) { neo3_set_range(r, g, b, 0, neo3_length - 1); }
 
 void neo3_show() {
   // prepare iterator

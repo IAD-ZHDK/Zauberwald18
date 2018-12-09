@@ -8,8 +8,8 @@
 #include <naos.h>
 
 #include "light.h"
-#include "servo.h"
 #include "neo3.h"
+#include "servo.h"
 
 static a32_smooth_t* o1_smoothing;
 
@@ -62,7 +62,6 @@ void object3_setup() {
 }
 
 double object3_loop() {
-
   int lt = get_sensor(1);  // top left
   int rt = get_sensor(3);  // top right
   int ld = get_sensor(4);  // down links
@@ -144,10 +143,10 @@ double object3_loop() {
   }
 
   float power = avt + avd + avl + avr;
-    power = power / 4;
-    power = power / 400.0;
+  power = power / 4;
+  power = power / 400.0;
   if (power > 1) {
-      power = 1;
+    power = 1;
   }
   power = a32_smooth_update(o1_smoothing, power);
   light_set(power);

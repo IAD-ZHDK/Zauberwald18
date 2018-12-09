@@ -25,19 +25,19 @@ static void loop() {
       new_power = object1_loop();
       break;
     case 2:
-         new_power = object2_loop();
+      new_power = object2_loop();
       break;
     case 3:
-        new_power = object3_loop();
+      new_power = object3_loop();
       break;
     case 4:
-        new_power = object4_loop();
+      new_power = object4_loop();
       break;
     case 5:
-       new_power = object5_loop();
+      new_power = object5_loop();
       break;
     case 6:
-        new_power = object6_loop();
+      new_power = object6_loop();
       break;
     default:
       break;
@@ -91,7 +91,7 @@ void app_main() {
       object5_setup();
       break;
     case 6:
-        object6_setup();
+      object6_setup();
       break;
     default:
       break;

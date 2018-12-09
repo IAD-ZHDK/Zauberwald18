@@ -133,6 +133,4 @@ void mot_init(bool two_motors) {
   xTaskCreatePinnedToCore(&mot_task, "mot", 8192, NULL, 2, NULL, 1);
 }
 
-void mot_set(double speed) {
-    mot_target = speed;
-}
+void mot_set(double speed) { mot_target = speed; }

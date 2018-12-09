@@ -1,15 +1,15 @@
 // Sun (laser)
 
-#include <naos.h>
 #include <art32/numbers.h>
 #include <art32/smooth.h>
-#include <esp_system.h>
 #include <driver/gpio.h>
+#include <esp_system.h>
+#include <naos.h>
 
 #include "light.h"
+#include "neo3.h"
 #include "neo5.h"
 #include "servo.h"
-#include "neo3.h"
 
 #define NUM_PIXELS 11
 #define SUN_CHANGE 5000
@@ -23,7 +23,7 @@ static uint32_t last_change = 0;
 
 void object5_setup() {
   // init neo pixels
-  neo3_init(29, NEO3_DEFAULT_PIN); // this object just has 29 neopixels for ambient lighting
+  neo3_init(29, NEO3_DEFAULT_PIN);  // this object just has 29 neopixels for ambient lighting
 
   // init lighting
   light_init(255, 200, 0, 0, 28);
@@ -37,62 +37,62 @@ void object5_setup() {
 
   // configure joystick left
   gpio_config_t left = {.pin_bit_mask = GPIO_SEL_32,
-      .mode = GPIO_MODE_INPUT,
-      .pull_up_en = GPIO_PULLUP_ENABLE,
-      .pull_down_en = GPIO_PULLDOWN_DISABLE,
-      .intr_type = GPIO_INTR_DISABLE};
+                        .mode = GPIO_MODE_INPUT,
+                        .pull_up_en = GPIO_PULLUP_ENABLE,
+                        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                        .intr_type = GPIO_INTR_DISABLE};
   ESP_ERROR_CHECK(gpio_config(&left));
 
   // configure joystick right
   gpio_config_t right = {.pin_bit_mask = GPIO_SEL_33,
-      .mode = GPIO_MODE_INPUT,
-      .pull_up_en = GPIO_PULLUP_ENABLE,
-      .pull_down_en = GPIO_PULLDOWN_DISABLE,
-      .intr_type = GPIO_INTR_DISABLE};
+                         .mode = GPIO_MODE_INPUT,
+                         .pull_up_en = GPIO_PULLUP_ENABLE,
+                         .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                         .intr_type = GPIO_INTR_DISABLE};
   ESP_ERROR_CHECK(gpio_config(&right));
 
   // enable h-bridge
   gpio_config_t master = {.pin_bit_mask = GPIO_SEL_16,
-      .mode = GPIO_MODE_OUTPUT,
-      .pull_up_en = GPIO_PULLUP_ENABLE,
-      .pull_down_en = GPIO_PULLDOWN_DISABLE,
-      .intr_type = GPIO_INTR_DISABLE};
+                          .mode = GPIO_MODE_OUTPUT,
+                          .pull_up_en = GPIO_PULLUP_ENABLE,
+                          .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                          .intr_type = GPIO_INTR_DISABLE};
   ESP_ERROR_CHECK(gpio_config(&master));
   ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_16, 1));
 
   // configure sun 1
   gpio_config_t sun1 = {.pin_bit_mask = GPIO_SEL_18,
-      .mode = GPIO_MODE_OUTPUT,
-      .pull_up_en = GPIO_PULLUP_ENABLE,
-      .pull_down_en = GPIO_PULLDOWN_DISABLE,
-      .intr_type = GPIO_INTR_DISABLE};
+                        .mode = GPIO_MODE_OUTPUT,
+                        .pull_up_en = GPIO_PULLUP_ENABLE,
+                        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                        .intr_type = GPIO_INTR_DISABLE};
   ESP_ERROR_CHECK(gpio_config(&sun1));
   ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 0));
 
   // configure sun 2
   gpio_config_t sun2 = {.pin_bit_mask = GPIO_SEL_19,
-      .mode = GPIO_MODE_OUTPUT,
-      .pull_up_en = GPIO_PULLUP_ENABLE,
-      .pull_down_en = GPIO_PULLDOWN_DISABLE,
-      .intr_type = GPIO_INTR_DISABLE};
+                        .mode = GPIO_MODE_OUTPUT,
+                        .pull_up_en = GPIO_PULLUP_ENABLE,
+                        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                        .intr_type = GPIO_INTR_DISABLE};
   ESP_ERROR_CHECK(gpio_config(&sun2));
   ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
 
   // configure sun 3
   gpio_config_t sun3 = {.pin_bit_mask = GPIO_SEL_17,
-      .mode = GPIO_MODE_OUTPUT,
-      .pull_up_en = GPIO_PULLUP_ENABLE,
-      .pull_down_en = GPIO_PULLDOWN_DISABLE,
-      .intr_type = GPIO_INTR_DISABLE};
+                        .mode = GPIO_MODE_OUTPUT,
+                        .pull_up_en = GPIO_PULLUP_ENABLE,
+                        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                        .intr_type = GPIO_INTR_DISABLE};
   ESP_ERROR_CHECK(gpio_config(&sun3));
   ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 0));
 
   // configure sun 4
   gpio_config_t sun4 = {.pin_bit_mask = GPIO_SEL_23,
-      .mode = GPIO_MODE_OUTPUT,
-      .pull_up_en = GPIO_PULLUP_ENABLE,
-      .pull_down_en = GPIO_PULLDOWN_DISABLE,
-      .intr_type = GPIO_INTR_DISABLE};
+                        .mode = GPIO_MODE_OUTPUT,
+                        .pull_up_en = GPIO_PULLUP_ENABLE,
+                        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+                        .intr_type = GPIO_INTR_DISABLE};
   ESP_ERROR_CHECK(gpio_config(&sun4));
   ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
 }
@@ -170,7 +170,7 @@ double object5_loop() {
   }
 
   // apply sun bounds (prevent lasers from leaving the white background)
-  switch(active_sun) {
+  switch (active_sun) {
     case 1:
       position = a32_constrain_d(position, 57, 85.2);
       break;
@@ -211,9 +211,9 @@ double object5_loop() {
   }
 
   // slowly apply power
-  if(current_power > power) {
+  if (current_power > power) {
     power += POWER_APPLY_RATE;
-  } else if(current_power <= power) {
+  } else if (current_power <= power) {
     power -= POWER_APPLY_RATE;
   }
 
@@ -221,7 +221,7 @@ double object5_loop() {
   power = a32_constrain_d(power, 0, 1);
 
   // set tower light
-  neo5_set_range((uint8_t)(power * 200), (uint8_t)(power * 150), 0, 4, NUM_PIXELS-1);
+  neo5_set_range((uint8_t)(power * 200), (uint8_t)(power * 150), 0, 4, NUM_PIXELS - 1);
 
   // set light
   light_set(power);
