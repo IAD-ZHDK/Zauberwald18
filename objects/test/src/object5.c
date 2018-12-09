@@ -13,16 +13,13 @@
 
 #define NUM_PIXELS 11
 #define SUN_CHANGE 5000
+#define JOYSTICK_SPEED 0.5
+#define POWER_APPLY_RATE 0.01
 
-static uint8_t servoPos = 90;
-static uint8_t servoMax = 160;
-static uint8_t servoMin = 20;
+static double power = 0;
+static double position = 90;
 static uint32_t active_sun = 1;
-static uint32_t random = 1;
-static unsigned long last_change = 0;
-static uint8_t tower_R = 0;
-static uint8_t tower_G = 0;
-static uint8_t tower_B = 0;
+static uint32_t last_change = 0;
 
 void object5_setup() {
   // init neo pixels
@@ -101,131 +98,133 @@ void object5_setup() {
 }
 
 double object5_loop() {
-
-  double power = 0;
-
-  // set up tower glow
-  uint16_t tower_red_light = (uint16_t) a32_safe_map_d(power, 0, 1, 0, 500);
-
-  //naos_log("red light %f, power %f", red_light, power);
-
-  if (tower_R < tower_red_light && tower_R < 255) {
-    tower_R++;
-  } else if (tower_R > 0) {
-    tower_R--;
-  }
-
-  if (tower_G < tower_red_light - 250 && tower_G < 150) {
-    tower_G++;
-  } else if (tower_G > 0) {
-    tower_G--;
-  }
-
-  if (tower_B < tower_red_light - 400 && tower_B < 100) {
-    tower_B++;
-  } else if (tower_B > 0) {
-    tower_B--;
-  }
-
-  for (uint8_t i = 4; i < NUM_PIXELS; i++) {
-    neo5_set_one(i, tower_R, tower_G, tower_B);
-  }
-
-  // check joystick left
-  if (gpio_get_level(GPIO_NUM_32) == 1 && servoPos < servoMax) {
-    servoPos++;
-    servo_write1(180 - servoPos);
-  }
-
-  // check joystick right
-  if (gpio_get_level(GPIO_NUM_33) == 1 && servoPos > servoMin) {
-    servoPos--;
-    servo_write1(180 - servoPos);
-  }
-
-  if (servoPos > servoMax) {
-    servoPos--;
-  } else if (servoPos < servoMin) {
-    servoPos++;
-  }
-
   // get current time
-  unsigned long now = naos_millis();
+  uint32_t now = naos_millis();
 
+  // check if sun needs to be changed
   if (last_change == 0 || now - last_change >= SUN_CHANGE) {
     // save time
     last_change = now;
 
-//    // randomly select tower
-//    while (active_sun == random) {
-//      random = abs(esp_random() >> 30); // get just two bits from esp_random();
-//      random += 1; // make sure we have values between 1 and 4
-//    }
-//
-//    active_sun = random;
-
-    active_sun++;
-    if(active_sun > 4) {
-      active_sun = 1;
+    // randomly select next sun
+    uint32_t next_sun = active_sun;
+    while (next_sun == active_sun) {
+      next_sun = (esp_random() >> 30) + 1;
     }
 
-    // laser/sun code
+    // set new sun
+    active_sun = next_sun;
+
+    // activate next sun
     switch (active_sun) {
       case 1:
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 1));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
-        neo5_set_one(0, 0, 0, 0);
-        neo5_set_one(1, 0, 0, 0);
-        neo5_set_one(2, 0, 0, 0);
         neo5_set_one(3, 255, 200, 0);
-        //  servoMin = 90;
-        //   servoMax = 150;
+        neo5_set_one(2, 0, 0, 0);
+        neo5_set_one(1, 0, 0, 0);
+        neo5_set_one(0, 0, 0, 0);
         break;
       case 2:
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 1));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
-        neo5_set_one(0, 0, 0, 0);
-        neo5_set_one(1, 0, 0, 0);
-        neo5_set_one(2, 255, 200, 0);
         neo5_set_one(3, 0, 0, 0);
-        //    servoMin = 10;
-        //    servoMax = 90;
+        neo5_set_one(2, 255, 200, 0);
+        neo5_set_one(1, 0, 0, 0);
+        neo5_set_one(0, 0, 0, 0);
         break;
       case 3:
-        ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 0));
+        ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 1));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
-        neo5_set_one(0, 0, 0, 0);
-        neo5_set_one(1, 255, 200, 0);
-        neo5_set_one(2, 0, 0, 0);
         neo5_set_one(3, 0, 0, 0);
-        //     servoMin = 90;
-        //   servoMax = 160;
+        neo5_set_one(2, 0, 0, 0);
+        neo5_set_one(1, 255, 200, 0);
+        neo5_set_one(0, 0, 0, 0);
         break;
       case 4:
-        ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_18, 0));
+        ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_19, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_17, 0));
         ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 1));
-        neo5_set_one(0, 255, 200, 0);
-        neo5_set_one(1, 0, 0, 0);
-        neo5_set_one(2, 0, 0, 0);
         neo5_set_one(3, 0, 0, 0);
-        //   servoMin = 70; //todo find the servo min and max for all lasers
-        //    servoMax = 100;
+        neo5_set_one(2, 0, 0, 0);
+        neo5_set_one(1, 0, 0, 0);
+        neo5_set_one(0, 255, 200, 0);
         break;
       default:
         break;
     }
   }
 
-  neo5_show();
+  // change position based on joystick
+  if (gpio_get_level(GPIO_NUM_32) == 0) {
+    position += JOYSTICK_SPEED;
+  } else if (gpio_get_level(GPIO_NUM_33) == 0) {
+    position -= JOYSTICK_SPEED;
+  }
+
+  // apply sun bounds (prevent lasers from leaving the white background)
+  switch(active_sun) {
+    case 1:
+      position = a32_constrain_d(position, 57, 85.2);
+      break;
+    case 2:
+      position = a32_constrain_d(position, 68.3, 97.4);
+      break;
+    case 3:
+      position = a32_constrain_d(position, 84, 112.8);
+      break;
+    case 4:
+      position = a32_constrain_d(position, 91, 120.5);
+      break;
+    default:
+      position = a32_constrain_d(position, 57, 120.5);
+      break;
+  }
+
+  // write position
+  servo_write1(180 - position);
+
+  // calculate current power
+  double current_power = 0;
+  switch (active_sun) {
+    case 1:
+      current_power = 1 - fabs(a32_safe_map_d(position, 67.6, 71.4, -1, 1));
+      break;
+    case 2:
+      current_power = 1 - fabs(a32_safe_map_d(position, 80.9, 84, -1, 1));
+      break;
+    case 3:
+      current_power = 1 - fabs(a32_safe_map_d(position, 94, 100, -1, 1));
+      break;
+    case 4:
+      current_power = 1 - fabs(a32_safe_map_d(position, 101.7, 105.8, -1, 1));
+      break;
+    default:
+      break;
+  }
+
+  // slowly apply power
+  if(current_power > power + POWER_APPLY_RATE) {
+    power += POWER_APPLY_RATE;
+  } else if(current_power < power - POWER_APPLY_RATE) {
+    power -= POWER_APPLY_RATE;
+  }
+
+  // set tower light
+  neo5_set_range((uint8_t)(power * 200), (uint8_t)(power * 150), 0, 4, NUM_PIXELS-1);
+
+  // set light
   light_set(power);
+
+  // set neo pixels
+  neo5_show();
   neo3_show();
 
   return power;
