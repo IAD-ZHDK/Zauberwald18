@@ -1,4 +1,4 @@
-// Sun (laser)
+// Solar 1 (Laserspiel): Buck, Lustenberger, Tanner
 
 #include <art32/numbers.h>
 #include <art32/smooth.h>

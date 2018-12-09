@@ -1,4 +1,4 @@
-// Solar (Sonnenblume)
+// Solar 2 (Sonnenblume): Gorgi, Hirsbrunner, Szakacs
 
 #include <art32/numbers.h>
 #include <art32/smooth.h>

@@ -1,4 +1,4 @@
-// Wind (Berg & Tal): Chen, Lopez
+// Wind 2 (Berg & Tal): Chen, Lopez
 
 #include "object2.h"
 #include <art32/numbers.h>

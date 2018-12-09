@@ -1,4 +1,5 @@
-// Wasser (sanduhr)
+// Wasser 1 (Sanduhr): Abbet, Koch, Schmid
+
 #include <art32/numbers.h>
 #include <art32/smooth.h>
 #include <driver/adc.h>

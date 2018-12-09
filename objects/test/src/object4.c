@@ -1,4 +1,4 @@
-// Wasser (Kugelbahn)
+// Wasser 2 (Lichtkugelbahn): Bui, Good, Schmid
 
 #include <art32/numbers.h>
 #include <string.h>
