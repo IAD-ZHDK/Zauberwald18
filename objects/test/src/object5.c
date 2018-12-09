@@ -38,12 +38,21 @@ void object5_setup() {
   neo5_init(NUM_PIXELS, NEO5_DEFAULT_PIN);
   neo5_show();
 
-  // configure joystick
-  // TODO: Properly configure joystick.
-  ESP_ERROR_CHECK(gpio_set_direction(GPIO_NUM_32, GPIO_MODE_INPUT));
-  ESP_ERROR_CHECK(gpio_set_direction(GPIO_NUM_33, GPIO_MODE_INPUT));
-  ESP_ERROR_CHECK(gpio_set_pull_mode(GPIO_NUM_32, GPIO_PULLUP_ONLY));
-  ESP_ERROR_CHECK(gpio_set_pull_mode(GPIO_NUM_33, GPIO_PULLUP_ONLY));
+  // configure joystick left
+  gpio_config_t left = {.pin_bit_mask = GPIO_SEL_32,
+      .mode = GPIO_MODE_INPUT,
+      .pull_up_en = GPIO_PULLUP_ENABLE,
+      .pull_down_en = GPIO_PULLDOWN_DISABLE,
+      .intr_type = GPIO_INTR_DISABLE};
+  ESP_ERROR_CHECK(gpio_config(&left));
+
+  // configure joystick right
+  gpio_config_t right = {.pin_bit_mask = GPIO_SEL_33,
+      .mode = GPIO_MODE_INPUT,
+      .pull_up_en = GPIO_PULLUP_ENABLE,
+      .pull_down_en = GPIO_PULLDOWN_DISABLE,
+      .intr_type = GPIO_INTR_DISABLE};
+  ESP_ERROR_CHECK(gpio_config(&right));
 
   // enable h-bridge
   gpio_config_t master = {.pin_bit_mask = GPIO_SEL_16,
@@ -122,13 +131,14 @@ double object5_loop() {
     neo5_set_one(i, tower_R, tower_G, tower_B);
   }
 
-  // joystick
-  if (gpio_get_level(GPIO_NUM_32) == 1 && servoPos < servoMax) { //left TODO  check pin number
+  // check joystick left
+  if (gpio_get_level(GPIO_NUM_32) == 1 && servoPos < servoMax) {
     servoPos++;
     servo_write1(180 - servoPos);
   }
 
-  if (gpio_get_level(GPIO_NUM_33) == 1 && servoPos > servoMin) {//right TODO  check pin number
+  // check joystick right
+  if (gpio_get_level(GPIO_NUM_33) == 1 && servoPos > servoMin) {
     servoPos--;
     servo_write1(180 - servoPos);
   }
