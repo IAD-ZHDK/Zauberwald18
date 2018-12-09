@@ -97,7 +97,7 @@ void object5_setup() {
   ESP_ERROR_CHECK(gpio_set_level(GPIO_NUM_23, 0));
 }
 
-double object5_loop() {
+double object5_loop(double light_base, double light_amplitude) {
   // get current time
   uint32_t now = naos_millis();
 
@@ -224,7 +224,7 @@ double object5_loop() {
   neo5_set_range((uint8_t)(power * 200), (uint8_t)(power * 150), 0, 4, NUM_PIXELS - 1);
 
   // set light
-  light_set(power);
+  light_set(power, light_base, light_amplitude);
 
   // set neo pixels
   neo5_show();

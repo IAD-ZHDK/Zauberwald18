@@ -11,6 +11,8 @@
 
 static long object_number = 0;
 static double multiplier = 1;
+static double light_base = 0.2;
+static double light_amplitude = 0.4;
 
 static double last_power;
 static uint32_t last_publish;
@@ -22,22 +24,22 @@ static void loop() {
   // run object code
   switch (object_number) {
     case 1:
-      new_power = object1_loop();
+      new_power = object1_loop(light_base, light_amplitude);
       break;
     case 2:
       new_power = object2_loop();
       break;
     case 3:
-      new_power = object3_loop();
+      new_power = object3_loop(light_base, light_amplitude);
       break;
     case 4:
-      new_power = object4_loop();
+      new_power = object4_loop(light_base, light_amplitude);
       break;
     case 5:
-      new_power = object5_loop();
+      new_power = object5_loop(light_base, light_amplitude);
       break;
     case 6:
-      new_power = object6_loop();
+      new_power = object6_loop(light_base, light_amplitude);
       break;
     default:
       break;
@@ -55,8 +57,10 @@ static void loop() {
 }
 
 static naos_param_t params[] = {
-    {.name = "Object-Number", .type = NAOS_LONG, .default_l = 0},
-    {.name = "Multiplier", .type = NAOS_DOUBLE, .default_d = 1},
+    {.name = "object-number", .type = NAOS_LONG, .default_l = 0},
+    {.name = "multiplier", .type = NAOS_DOUBLE, .default_d = 1.0, .sync_d = &multiplier},
+    {.name = "light-base", .type = NAOS_DOUBLE, .default_d = 0.2, .sync_d = &light_base},
+    {.name = "light-amplitude", .type = NAOS_DOUBLE, .default_d = 0.4, .sync_d = &light_amplitude},
 };
 
 static naos_config_t config = {.device_type = "zw18",
@@ -64,7 +68,7 @@ static naos_config_t config = {.device_type = "zw18",
                                .loop_callback = loop,
                                .loop_interval = 20,
                                .parameters = params,
-                               .num_parameters = 2};
+                               .num_parameters = 4};
 
 void app_main() {
   // initialize naos

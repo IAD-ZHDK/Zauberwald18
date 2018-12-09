@@ -61,7 +61,7 @@ void object3_setup() {
   ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11));
 }
 
-double object3_loop() {
+double object3_loop(double light_base, double light_amplitude) {
   int lt = get_sensor(1);  // top left
   int rt = get_sensor(3);  // top right
   int ld = get_sensor(4);  // down links
@@ -149,7 +149,7 @@ double object3_loop() {
     power = 1;
   }
   power = a32_smooth_update(o1_smoothing, power);
-  light_set(power);
+  light_set(power, light_base, light_amplitude);
   neo3_show();
   return power;
 }

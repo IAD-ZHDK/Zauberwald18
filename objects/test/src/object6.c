@@ -60,7 +60,7 @@ void object6_setup() {
   ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11));
 }
 
-double object6_loop() {
+double object6_loop(double light_base, double light_amplitude) {
   int top = get_sensor(1);  //
   top = a32_smooth_update(o1_smoothing, top);
   int bottom = get_sensor(2);  //
@@ -104,7 +104,7 @@ double object6_loop() {
   //
 
   // set neo pixel
-  light_set(power);
+  light_set(power, light_base, light_amplitude);
   neo3_show();
   return power;
 }

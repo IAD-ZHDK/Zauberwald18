@@ -46,7 +46,7 @@ void object4_setup() {
   neo4_show();
 }
 
-double object4_loop() {
+double object4_loop(double light_base, double light_amplitude) {
   // read encoder
   double rot = enc_get();
 
@@ -118,7 +118,7 @@ double object4_loop() {
   neo5_show();
 
   // set lighting
-  light_set(power);
+  light_set(power, light_base, light_amplitude);
   neo3_show();
 
   return power;

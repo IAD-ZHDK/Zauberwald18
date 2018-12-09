@@ -33,7 +33,7 @@ void object1_setup() {
   light_init(254, 0, 254, 0, 35);  // magenta
 }
 
-double object1_loop() {
+double object1_loop(double light_base, double light_amplitude) {
   // read anemometer rate
   double rate = a32_constrain_d(anemo_get(), 0, 5);
 
@@ -53,7 +53,7 @@ double object1_loop() {
   double power = a32_safe_map_d(rate, 0.25, 5, 0, 1);
 
   // set neo pixel
-  light_set(power);
+  light_set(power, light_base, light_amplitude);
 
   // show pixels
   neo3_show();
