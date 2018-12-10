@@ -44,11 +44,12 @@ public class Sketch extends PApplet {
     // subscribe to topics
     client.subscribe("#");
 
-    // lod mask
+    // load mask
     mask = loadShape("mask.svg");
     mask.setFill(color(0,0,0));
-    mask.scale(mask.height / height);
-    mask.translate((mask.width - width) / -2, 0);
+    float ratio = height / mask.height;
+    mask.scale(ratio);
+    mask.translate((mask.width * ratio - width) / -2, 0);
 
     // create visualizations
     viz1 = new kenos.Visualization(this);
