@@ -27,11 +27,13 @@ public class Sketch extends PApplet {
 
   private static final int LENGTH = 180;
 
+  private static final boolean DEBUG = false;
+
   private int current = 1;
 
   public void settings() {
-    // set size
-    size(1050, 1050, P3D); // FX2D
+    // run in full screen
+    fullScreen(P3D); // FX2D
   }
 
   public void setup() {
@@ -121,9 +123,11 @@ public class Sketch extends PApplet {
     }
 
     // draw current viz and frame rate
-    fill(255);
-    noStroke();
-    text(current + " - " + frameRate, 10, 20);
+    if (DEBUG) {
+      fill(255);
+      noStroke();
+      text(current + " - " + frameRate, 10, 20);
+    }
   }
 
   public void messageReceived(String topic, byte[] payload) {
