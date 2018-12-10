@@ -140,12 +140,8 @@ double object3_loop(double light_base, double light_amplitude) {
     }
   }
 
-  double power = avt + avd + avl + avr;
-  power = power / 4;
-  power = power / 400.0;
-  if (power > 1) {
-    power = 1;
-  }
+  // calculate power
+  double power = a32_safe_map_d(avt + avd + avl + avr, 100, 1600, 0, 1);
 
   power = a32_smooth_update(o1_smoothing, power);
   light_set(power, light_base, light_amplitude);
