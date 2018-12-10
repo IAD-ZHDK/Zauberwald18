@@ -93,8 +93,7 @@ public class Visualization {
     p.stroke(255);
     p.fill(255);
 
-    p.fill(0, 120);
-    p.rect(0, 0, p.width, p.height);
+    p.background(0, 120);
 
     for (Particle _p : particlesSolar) {
       if (solar > 0) {
