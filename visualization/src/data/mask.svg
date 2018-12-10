@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="1500px" height="1050px" viewBox="0 0 1500 1050" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="2000px" height="1050px" viewBox="0 0 2000 1050" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
-    <title>Artboard</title>
+    <title>Combined Shape</title>
     <desc>Created with Sketch.</desc>
-    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M0,0 L1500,0 L1500,1050 L0,1050 L0,0 Z M750,1045 C1037.18807,1045 1270,812.18807 1270,525 C1270,237.81193 1037.18807,5 750,5 C462.81193,5 230,237.81193 230,525 C230,812.18807 462.81193,1045 750,1045 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" fill="#000000" fill-rule="nonzero">
+            <path d="M0,0 L2000,0 L2000,1050 L0,1050 L0,0 Z M1000,1045 C1287.18807,1045 1520,812.18807 1520,525 C1520,237.81193 1287.18807,5 1000,5 C712.81193,5 480,237.81193 480,525 C480,812.18807 712.81193,1045 1000,1045 Z" id="Combined-Shape"></path>
+        </g>
     </g>
 </svg>
