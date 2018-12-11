@@ -19,11 +19,11 @@ public class Sketch extends PApplet {
   private int start;
   private int current;
   private radschlag.Visualization viz1;
+  private wawiso.Visualization viz6;
+  private awave.Visualization viz3;
   private electroswing.Visualization viz2;
-  private dedo.Visualization viz3;
   private blitzkraftwerk.Visualization viz4;
   private radar.Visualization viz5;
-  private wawiso.Visualization viz6;
 
   public void settings() {
     if (DEBUG) {
@@ -51,7 +51,7 @@ public class Sketch extends PApplet {
       // create visualizations
       viz1 = new radschlag.Visualization(this);
       viz2 = new electroswing.Visualization(this);
-      viz3 = new dedo.Visualization(this);
+      viz3 = new awave.Visualization(this);
       viz4 = new Visualization(this);
       viz5 = new radar.Visualization(this);
       viz6 = new wawiso.Visualization(this);

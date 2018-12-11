@@ -1,4 +1,4 @@
-package dedo;
+package awave;
 
 import processing.core.*;
 import processing.data.*;
@@ -18,9 +18,9 @@ public class Visualization {
   public void setup() {
     curves = new ArrayList<>();
 
-    Table solar = p.loadTable("dedo_solar.csv");
-    Table wind = p.loadTable("dedo_wind.csv");
-    Table water = p.loadTable("dedo_water.csv");
+    Table solar = p.loadTable("awave_solar.csv");
+    Table wind = p.loadTable("awave_wind.csv");
+    Table water = p.loadTable("awave_water.csv");
 
     int a = 0;
     int aa =
