@@ -32,7 +32,7 @@ class Rings {
     // parse data
     for (int i = 0; i < table.getRowCount(); i++) {
       float data = table.getFloat(i, column);
-      data = map(data, 0, maxData, 0, 95) + 15;
+      data = map(data, 0, maxData, 0, (p.height/6f) - 30) + 15;
       list[i] = data;
     }
   }
@@ -52,7 +52,7 @@ class Rings {
     // draw points
     for (float angle = 360; angle > 0; angle -= 0.8) {
       // calculate point
-      PVector v = pointOnCircle(angle, 125 - list[index2]);
+      PVector v = pointOnCircle(angle, (p.height/6f) - list[index2]);
 
       // add vertex
       p.vertex(v.x, v.y);

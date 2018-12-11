@@ -69,7 +69,7 @@ public class Visualization {
     // draw black inner circle
     p.fill(0);
     p.noStroke();
-    p.ellipse(0, 0, 250, 250);
+    p.ellipse(0, 0, p.height / 3f, p.height / 3f);
 
     // draw rings
     ringWind.paint();
