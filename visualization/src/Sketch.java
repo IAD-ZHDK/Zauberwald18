@@ -27,7 +27,7 @@ public class Sketch extends PApplet {
 
   public void settings() {
     if(DEBUG) {
-      size(800, 800, P3D);
+      size(1200, 800, P3D);
     } else {
       fullScreen(P3D);
     }
@@ -44,9 +44,8 @@ public class Sketch extends PApplet {
     // load mask
     mask = loadShape("mask.svg");
     mask.setFill(color(0, 0, 0));
-    float ratio = height / mask.height;
-    mask.scale(ratio);
-    mask.translate((mask.width * ratio - width) / -2, 0);
+    mask.scale(height / mask.height);
+    mask.translate((mask.width * (height / mask.height) - width) / -2, 0);
 
     // create visualizations
     viz1 = new kenos.Visualization(this);
@@ -114,9 +113,11 @@ public class Sketch extends PApplet {
     this.popMatrix();
 
     // draw mask
-    fill(0);
+    fill(0, 0, 0);
     noStroke();
     shape(mask, 0, 0);
+    rect(0, 0, (mask.width * (height / mask.height) - width) / -2, height);
+    rect(((mask.width * (height / mask.height) - width) / -2) + mask.width * (height / mask.height), 0, width, height);
 
     // calculate fade
     float fade = 0;
