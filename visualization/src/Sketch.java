@@ -4,6 +4,8 @@ import processing.core.*;
 
 // TODO: Check MQTT stability.
 
+// TODO: Use FX2D (masking issues, frame-rate issues).
+
 public class Sketch extends PApplet {
   private static final int LENGTH = 30;
   private static final int FADE_LENGTH = 2;
