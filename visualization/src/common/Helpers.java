@@ -12,4 +12,9 @@ public class Helpers {
     PVector p = new PVector(x, y, 0);
     return p.mult(distance);
   }
+
+  public static float angleDiff(float a1, float a2) {
+    float phi = abs(a1 - a2) % 360;
+    return phi > 180 ? 360 - phi : phi;
+  }
 }
