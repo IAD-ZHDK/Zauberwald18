@@ -18,7 +18,7 @@ public class Sketch extends PApplet {
   private float solar2;
   private int start;
   private int current;
-  private kenos.Visualization viz1;
+  private radschlag.Visualization viz1;
   private electroswing.Visualization viz2;
   private dedo.Visualization viz3;
   private blitzkraftwerk.Visualization viz4;
@@ -49,7 +49,7 @@ public class Sketch extends PApplet {
       mask.translate((mask.width * (height / mask.height) - width) / -2, 0);
 
       // create visualizations
-      viz1 = new kenos.Visualization(this);
+      viz1 = new radschlag.Visualization(this);
       viz2 = new electroswing.Visualization(this);
       viz3 = new dedo.Visualization(this);
       viz4 = new Visualization(this);

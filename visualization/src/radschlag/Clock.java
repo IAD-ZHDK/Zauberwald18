@@ -1,4 +1,4 @@
-package kenos;
+package radschlag;
 
 import java.util.ArrayList;
 

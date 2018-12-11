@@ -1,4 +1,4 @@
-package kenos;
+package radschlag;
 
 import processing.core.*;
 import processing.data.*;
@@ -24,7 +24,7 @@ public class Visualization {
 
   public void setup() {
     // load table
-    Table data = p.loadTable("kenos.csv", "header,csv");
+    Table data = p.loadTable("radschlag.csv", "header,csv");
 
     // create clocks
     clockConsumption =

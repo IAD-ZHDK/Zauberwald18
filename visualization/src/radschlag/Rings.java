@@ -1,4 +1,4 @@
-package kenos;
+package radschlag;
 
 import processing.core.*;
 import processing.data.*;
