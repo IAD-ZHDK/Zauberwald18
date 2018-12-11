@@ -1,8 +1,6 @@
 import mqtt.MQTTClient;
 import processing.core.*;
 
-// TODO: Check MQTT stability.
-
 public class Sketch extends PApplet {
   private static final int LENGTH = 30 * 1000;
   private static final int FADE_LENGTH = 2 * 1000;
