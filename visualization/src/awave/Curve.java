@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 import static processing.core.PApplet.*;
 
-// TODO: Cleanup.
-
 class Curve {
   int A;
   private PApplet p;
