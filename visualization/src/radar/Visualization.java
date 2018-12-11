@@ -91,9 +91,9 @@ public class Visualization {
       float angleDiff = angleDiff(heading, angle);
 
       // check angle diff
-      if (angleDiff < 90) {
+      if (angleDiff < 60) {
         // calculate opacity
-        float opacity = map(angleDiff, 90, 0, 0, 255);
+        float opacity = map(angleDiff, 60, 0, 0, 255);
 
         // draw point
         p.noStroke();
@@ -103,7 +103,7 @@ public class Visualization {
         // check input
         if (input > 0) {
           // calculate size
-          float size = map(angleDiff, 90, 0, 0, circleSize) * input;
+          float size = map(angleDiff, 60, 0, 0, circleSize) * input;
 
           // draw circle
           p.noFill();
