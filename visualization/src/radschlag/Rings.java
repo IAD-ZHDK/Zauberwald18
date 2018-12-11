@@ -37,6 +37,10 @@ class Rings {
     }
   }
 
+  float efficiency() {
+    return map(list[index]-15, 0, (p.height/6f) - 30, 0, 1);
+  }
+
   void paint() {
     // set color
     p.stroke(color);

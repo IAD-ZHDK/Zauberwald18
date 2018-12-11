@@ -50,10 +50,15 @@ public class Visualization {
     float consumption = clockConsumption.get();
     float multiplier = map(consumption, 0, 2500000, 0, 1);
 
+    // get efficiencies
+    float rainEff = ringRain.efficiency();
+    float windEff = ringWind.efficiency();
+    float sunEff = ringSun.efficiency();
+
     // calculate inputs
-    float i1 = water * (multiplier / 3);
-    float i2 = wind * (multiplier / 3);
-    float i3 = solar * (multiplier / 3);
+    float i1 = water * (multiplier / 3) * rainEff;
+    float i2 = wind * (multiplier / 3) * windEff;
+    float i3 = solar * (multiplier / 3) * sunEff;
 
     // set current data
     clockSun.set(i1 + i2 + i3);
