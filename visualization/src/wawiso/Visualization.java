@@ -89,7 +89,7 @@ public class Visualization {
     }
   }
 
-  public void draw(float t, float water, float wind, float solar) {
+  public void draw(float water, float wind, float solar) {
     p.stroke(255);
     p.fill(255);
 

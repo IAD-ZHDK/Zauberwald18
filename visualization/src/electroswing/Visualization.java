@@ -56,7 +56,7 @@ public class Visualization {
     AKWRing = new Rings(p, p.color(255), 25);
   }
 
-  public void draw(float t, float water, float wind, float solar) {
+  public void draw(float water, float wind, float solar) {
     if (currentAKWAmplitude > maxAKWAmplitude - AKW_STEPS
         && currentAKWAmplitude < maxAKWAmplitude + AKW_STEPS) {
       endValues[k] = map(grossProduction[k], 1322898, 2239285, 0, 1);

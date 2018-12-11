@@ -45,7 +45,7 @@ public class Visualization {
     }
   }
 
-  public void draw(float t, float water, float wind, float solar) {
+  public void draw(float water, float wind, float solar) {
     p.background(0);
 
     p.noStroke();

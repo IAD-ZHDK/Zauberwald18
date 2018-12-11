@@ -7,8 +7,8 @@ import processing.core.*;
 // TODO: Use FX2D (masking issues, frame-rate issues).
 
 public class Sketch extends PApplet {
-  private static final int LENGTH = 30;
-  private static final int FADE_LENGTH = 2;
+  private static final int LENGTH = 30 * 1000;
+  private static final int FADE_LENGTH = 2 * 1000;
   private static final boolean DEBUG = false;
   private MQTTClient client;
   private PShape mask;
@@ -76,9 +76,6 @@ public class Sketch extends PApplet {
     // get time difference
     int diff = millis() - start;
 
-    // calculate time
-    float time = constrain(map(diff, 0, LENGTH * 1000, 0, 1), 0, 1);
-
     // get max input levels
     float water = max(water1, water2);
     float wind = max(wind1, wind2);
@@ -91,22 +88,22 @@ public class Sketch extends PApplet {
     // draw visualization
     switch (current) {
       case 1:
-        viz1.draw(time, water, wind, solar);
+        viz1.draw(water, wind, solar);
         break;
       case 2:
-        viz2.draw(time, water, wind, solar);
+        viz2.draw(water, wind, solar);
         break;
       case 3:
-        viz3.draw(time, water, wind, solar);
+        viz3.draw(water, wind, solar);
         break;
       case 4:
-        viz4.draw(time, water, wind, solar);
+        viz4.draw(water, wind, solar);
         break;
       case 5:
-        viz5.draw(time, water, wind, solar);
+        viz5.draw(water, wind, solar);
         break;
       case 6:
-        viz6.draw(time, water, wind, solar);
+        viz6.draw(water, wind, solar);
         break;
     }
 
@@ -123,10 +120,10 @@ public class Sketch extends PApplet {
 
     // calculate fade
     float fade = 0;
-    if (diff < FADE_LENGTH  * 1000) {
-      fade = constrain(map(diff, 0, FADE_LENGTH * 1000, 1, 0), 0, 1);
-    } else if (diff > (LENGTH - FADE_LENGTH) * 1000) {
-      fade = constrain(map(diff, (LENGTH - FADE_LENGTH) * 1000, LENGTH * 1000, 0, 1), 0, 1);
+    if (diff < FADE_LENGTH) {
+      fade = constrain(map(diff, 0, FADE_LENGTH, 1, 0), 0, 1);
+    } else if (diff > (LENGTH - FADE_LENGTH)) {
+      fade = constrain(map(diff, (LENGTH - FADE_LENGTH), LENGTH, 0, 1), 0, 1);
     }
 
     // apply fade
@@ -136,7 +133,7 @@ public class Sketch extends PApplet {
     }
 
     // reset time and select next visualization
-    if (time >= 1) {
+    if (diff >= LENGTH) {
       start = millis();
       current++;
       if (current > 6) {

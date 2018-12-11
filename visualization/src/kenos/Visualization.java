@@ -39,7 +39,7 @@ public class Visualization {
     ringSun = new Rings(p, data, "sun", p.color(255, 255, 0));
   }
 
-  public void draw(float t, float water, float wind, float solar) {
+  public void draw(float water, float wind, float solar) {
     // draw background
     p.background(0);
 
