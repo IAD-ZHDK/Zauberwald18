@@ -32,6 +32,9 @@ public class Sketch extends PApplet {
 
   public void setup() {
     try {
+      // disable cursor
+      noCursor();
+
       // create mqtt client
       client = new MQTTClient(this);
       client.connect("mqtt://0.0.0.0:1884", "visualization");
