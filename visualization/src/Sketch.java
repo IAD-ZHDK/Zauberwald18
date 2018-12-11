@@ -162,6 +162,10 @@ public class Sketch extends PApplet {
     }
   }
 
+  public void clientConnected() {
+    println("client connected");
+  }
+
   public void messageReceived(String topic, byte[] payload) {
     // parse payload
     String str = new String(payload);
@@ -190,6 +194,10 @@ public class Sketch extends PApplet {
         // print message if not known
         println("unused message: " + topic + " - " + new String(payload));
     }
+  }
+
+  public void connectionLost() {
+    println("connection lost");
   }
 
   public void keyPressed() {
