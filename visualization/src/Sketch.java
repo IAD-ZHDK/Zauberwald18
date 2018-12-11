@@ -1,4 +1,3 @@
-import blitzkraftwerk.Visualization;
 import mqtt.MQTTClient;
 import processing.core.*;
 
@@ -18,12 +17,12 @@ public class Sketch extends PApplet {
   private float solar2;
   private int start;
   private int current;
-  private radschlag.Visualization viz1;
-  private wawiso.Visualization viz6;
-  private awave.Visualization viz3;
-  private electroswing.Visualization viz2;
-  private blitzkraftwerk.Visualization viz4;
-  private radar.Visualization viz5;
+  private electroswing.Visualization viz1;
+  private radschlag.Visualization viz2;
+  private wawiso.Visualization viz3;
+  private awave.Visualization viz4;
+  private blitzkraftwerk.Visualization viz5;
+  private radar.Visualization viz6;
 
   public void settings() {
     if (DEBUG) {
@@ -49,12 +48,12 @@ public class Sketch extends PApplet {
       mask.translate((mask.width * (height / mask.height) - width) / -2, 0);
 
       // create visualizations
-      viz1 = new radschlag.Visualization(this);
-      viz2 = new electroswing.Visualization(this);
-      viz3 = new awave.Visualization(this);
-      viz4 = new Visualization(this);
-      viz5 = new radar.Visualization(this);
-      viz6 = new wawiso.Visualization(this);
+      viz1 = new electroswing.Visualization(this);
+      viz2 = new radschlag.Visualization(this);
+      viz3 = new wawiso.Visualization(this);
+      viz4 = new awave.Visualization(this);
+      viz5 = new blitzkraftwerk.Visualization(this);
+      viz6 = new radar.Visualization(this);
 
       // setup visualization
       viz1.setup();
