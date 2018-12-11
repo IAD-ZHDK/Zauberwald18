@@ -38,9 +38,6 @@ public class Sketch extends PApplet {
       client = new MQTTClient(this);
       client.connect("mqtt://0.0.0.0:1884", "visualization");
 
-      // subscribe to topics
-      client.subscribe("#");
-
       // load mask
       mask = loadShape("mask.svg");
       mask.setFill(color(0, 0, 0));
@@ -164,6 +161,9 @@ public class Sketch extends PApplet {
 
   public void clientConnected() {
     println("client connected");
+
+    // subscribe to topics
+    client.subscribe("#");
   }
 
   public void messageReceived(String topic, byte[] payload) {
