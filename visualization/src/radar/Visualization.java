@@ -12,8 +12,6 @@ import static processing.core.PApplet.*;
 
 // TODO: Fix Radar Jump.
 
-// TODO: Merge three viz functions.
-
 public class Visualization {
   private PApplet p;
 
@@ -23,10 +21,6 @@ public class Visualization {
 
   private UnfoldingMap map;
   private float angle = 0;
-
-  private final static int SOLAR_SIZE = 5;
-  private final static int WATER_SIZE = 6;
-  private final static int WIND_SIZE = 10;
 
   public Visualization(PApplet parent) {
     // set parent
@@ -74,104 +68,26 @@ public class Visualization {
       angle = 0;
     }
 
-    vizSolar(solar);
-    vizWater(water);
-    vizWind(wind);
+    viz(solarPositions, solar, p.color(255, 255, 0), 5, 1, 20);
+    viz(waterPositions, water, p.color(0, 255, 255), 6, 1, 50);
+    viz(windPositions, wind, p.color(255, 0, 255), 10, 3, 60);
   }
 
-  private void vizSolar(float solar) {
-    float pointDist;
-    float pointAngle;
-    float pointerDist;
-    float pointOpacity;
-    float pointRadInner;
-    int pointerDistMin = 0;
-    int pointerDistMax = 80;
-    float circleSizeSolar;
-
-    p.noStroke();
-
-    for (Location solarPos : solarPositions) {
-      ScreenPosition pos = map.getScreenPosition(solarPos);
-      pointDist = dist(p.width / 2f, p.height / 2f, pos.x, pos.y);
-      pointRadInner = (pos.x - (p.width / 2f)) / pointDist;
-      if (pos.y < (p.height / 2)) {
-        pointAngle = map(pointRadInner, 1, -1, 3, 180);
-      } else {
-        pointAngle = map(pointRadInner, -1, 1, 183, 360);
-      }
-
-      pointerDist = angle - pointAngle;
-      if (pointerDist < -340 && pointerDist > -360) {
-        pointerDist = map(pointerDist, -300, -360, 150, 0);
-      }
-      if (pointerDist < pointerDistMax && pointerDist > pointerDistMin) {
-        pointOpacity = map(pointerDist, pointerDistMax, pointerDistMin, 0, 100);
-        p.noStroke();
-        p.fill(255, 255, 0, pointOpacity);
-        p.ellipse(pos.x, pos.y, SOLAR_SIZE, SOLAR_SIZE);
-        if (solar > 0 && pointerDist > 0) {
-          p.noFill();
-          p.stroke(255, 255, 0, pointOpacity);
-          p.strokeWeight(1);
-          circleSizeSolar = map(pointerDist, 150, 0, 0, 20);
-          p.ellipse(pos.x, pos.y, circleSizeSolar, circleSizeSolar);
-        }
-      }
-    }
-  }
-
-  private  void vizWater(float water) {
-    float pointDist;
-    float pointAngle;
-    float pointerDist;
-    float pointOpacity;
-    float pointRadInner;
-    float pointerDistMin = 0;
-    float pointerDistMax = 120;
-    float circleSizeWater;
-
-    p.noStroke();
-
-    for (Location waterPos : waterPositions) {
-      ScreenPosition pos = map.getScreenPosition(waterPos);
-      pointDist = dist(p.width / 2f, p.height / 2f, pos.x, pos.y);
-      pointRadInner = (pos.x - (p.width / 2f)) / pointDist;
-      if (pos.y < (p.height / 2)) {
-        pointAngle = map(pointRadInner, 1, -1, 3, 180);
-      } else {
-        pointAngle = map(pointRadInner, -1, 1, 183, 360);
-      }
-
-      pointerDist = angle - pointAngle;
-      if (pointerDist < -340 && pointerDist > -360) {
-        pointerDist = map(pointerDist, -300, -360, 150, 0);
-      }
-      if (pointerDist < pointerDistMax && pointerDist > pointerDistMin) {
-        pointOpacity = map(pointerDist, pointerDistMax, pointerDistMin, 0, 100);
-        p.noStroke();
-        p.fill(0, 255, 255, pointOpacity);
-        p.ellipse(pos.x, pos.y, WATER_SIZE, WATER_SIZE);
-        if (water > 0 && pointDist > 0) {
-          p.noFill();
-          p.stroke(0, 255, 255, pointOpacity);
-          p.strokeWeight(1);
-          circleSizeWater = map(pointerDist, 0, 150, 50, 0);
-          p.ellipse(pos.x, pos.y, circleSizeWater, circleSizeWater);
-        }
-      }
-    }
-  }
-
-  private void vizWind(float wind) {
+  private void viz(
+      ArrayList<Location> positions,
+      float wind,
+      int color,
+      int pointSize,
+      int circleWeight,
+      int circleSize) {
     float pointAngle;
     float pointerDistMin = 0;
     float pointerDistMax = 150;
 
     p.noStroke();
 
-    for (Location windPos : windPositions) {
-      ScreenPosition pos = map.getScreenPosition(windPos);
+    for (Location loc : positions) {
+      ScreenPosition pos = map.getScreenPosition(loc);
 
       float pointDist = dist(p.width / 2f, p.height / 2f, pos.x, pos.y);
       float pointRadInner = (pos.x - (p.width / 2f)) / pointDist;
@@ -191,15 +107,15 @@ public class Visualization {
         float pointOpacity = map(pointerDist, pointerDistMax, pointerDistMin, 0, 100);
 
         p.noStroke();
-        p.fill(255, 0, 255, pointOpacity);
-        p.ellipse(pos.x, pos.y, WIND_SIZE, WIND_SIZE);
+        p.fill(color, pointOpacity);
+        p.ellipse(pos.x, pos.y, pointSize, pointSize);
 
         if (wind > 0 && pointerDist > 0) {
           p.noFill();
-          p.stroke(255, 0, 255, pointOpacity);
-          p.strokeWeight(3);
+          p.stroke(color, pointOpacity);
+          p.strokeWeight(circleWeight);
 
-          float circleSizeWind = map(pointerDist, 0, 150, 60, 0);
+          float circleSizeWind = map(pointerDist, 0, 150, circleSize, 0);
           p.ellipse(pos.x, pos.y, circleSizeWind, circleSizeWind);
         }
       }
