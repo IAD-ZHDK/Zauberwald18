@@ -5,19 +5,19 @@ import processing.core.*;
 // TODO: Check MQTT stability.
 
 public class Sketch extends PApplet {
+  private static final int LENGTH = 30;
+  private static final int FADE_LENGTH = 2;
+  private static final boolean DEBUG = false;
   private MQTTClient client;
-
   private PShape mask;
-
   private float water1;
   private float water2;
   private float wind1;
   private float wind2;
   private float solar1;
   private float solar2;
-
-  private int start = 0;
-
+  private int start;
+  private int current;
   private kenos.Visualization viz1;
   private electroswing.Visualization viz2;
   private dedo.Visualization viz3;
@@ -25,15 +25,12 @@ public class Sketch extends PApplet {
   private radar.Visualization viz5;
   private wawiso.Visualization viz6;
 
-  private static final int LENGTH = 180;
-
-  private static final boolean DEBUG = false;
-
-  private int current = 1;
-
   public void settings() {
-    // run in full screen
-    fullScreen(P3D); // FX2D
+    if(DEBUG) {
+      size(800, 800, P3D);
+    } else {
+      fullScreen(P3D);
+    }
   }
 
   public void setup() {
@@ -46,7 +43,7 @@ public class Sketch extends PApplet {
 
     // load mask
     mask = loadShape("mask.svg");
-    mask.setFill(color(0,0,0));
+    mask.setFill(color(0, 0, 0));
     float ratio = height / mask.height;
     mask.scale(ratio);
     mask.translate((mask.width * ratio - width) / -2, 0);
@@ -69,6 +66,9 @@ public class Sketch extends PApplet {
 
     // set start
     start = millis();
+
+    // set first visualization
+    current = 1;
   }
 
   public void draw() {
@@ -118,9 +118,27 @@ public class Sketch extends PApplet {
     noStroke();
     shape(mask, 0, 0);
 
-    // reset time
+    // calculate fade
+    float fade = 0;
+    if (diff < FADE_LENGTH  * 1000) {
+      fade = constrain(map(diff, 0, FADE_LENGTH * 1000, 1, 0), 0, 1);
+    } else if (diff > (LENGTH - FADE_LENGTH) * 1000) {
+      fade = constrain(map(diff, (LENGTH - FADE_LENGTH) * 1000, LENGTH * 1000, 0, 1), 0, 1);
+    }
+
+    // apply fade
+    if (fade > 0) {
+      fill(0, fade * 255);
+      rect(0, 0, width, height);
+    }
+
+    // reset time and select next visualization
     if (time >= 1) {
       start = millis();
+      current++;
+      if (current > 6) {
+        current = 1;
+      }
     }
 
     // draw current viz and frame rate
