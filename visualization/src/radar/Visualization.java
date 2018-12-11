@@ -8,7 +8,7 @@ import processing.data.*;
 
 import java.util.ArrayList;
 
-import static common.Helpers.angleDiff;
+import static common.Helpers.*;
 import static processing.core.PApplet.*;
 
 public class Visualization {

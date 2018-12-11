@@ -3,6 +3,7 @@ package kenos;
 import processing.core.*;
 import processing.data.*;
 
+import static common.Helpers.*;
 import static processing.core.PApplet.*;
 
 class Rings {
@@ -51,7 +52,7 @@ class Rings {
     // draw points
     for (float angle = 360; angle > 0; angle -= 0.8) {
       // calculate point
-      PVector v = common.Helpers.pointOnCircle(angle, 125 - list[index2]);
+      PVector v = pointOnCircle(angle, 125 - list[index2]);
 
       // add vertex
       p.vertex(v.x, v.y);

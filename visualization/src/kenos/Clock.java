@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import processing.core.*;
 import processing.data.*;
 
+import static common.Helpers.*;
 import static processing.core.PApplet.*;
 
 class Clock {
@@ -41,7 +42,7 @@ class Clock {
       values[i] = value;
 
       // calculate position
-      PVector v = common.Helpers.pointOnCircle(angle, map(value, 0, max, 0, parent.height / 2f));
+      PVector v = pointOnCircle(angle, map(value, 0, max, 0, parent.height / 2f));
 
       // advance angle
       angle = angle + 360f / SEGMENTS;

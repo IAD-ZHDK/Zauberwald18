@@ -2,11 +2,10 @@ package kenos;
 
 import processing.core.PApplet;
 import processing.core.PVector;
-import processing.data.Table;
 
-import javax.script.ScriptEngineFactory;
 import java.util.ArrayList;
 
+import static common.Helpers.*;
 import static processing.core.PApplet.*;
 
 class FixedClock {
@@ -37,7 +36,7 @@ class FixedClock {
     float angle = counter * 360f / SEGMENTS;
 
     // calculate position
-    PVector v = common.Helpers.pointOnCircle(angle, map(value, 0, 1, 125, p.height / 2f));
+    PVector v = pointOnCircle(angle, map(value, 0, 1, 125, p.height / 2f));
 
     // set position
     list.set(counter, v);
