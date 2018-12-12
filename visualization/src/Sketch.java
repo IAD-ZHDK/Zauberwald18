@@ -42,7 +42,7 @@ public class Sketch extends PApplet {
       // create mask
       mask = createShape();
       mask.beginShape();
-      mask.fill(255, 255, 0);
+      mask.fill(0, 0, 0);
       mask.noStroke();
 
       // add outline
