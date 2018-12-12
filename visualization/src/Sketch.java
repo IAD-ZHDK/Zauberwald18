@@ -24,7 +24,7 @@ public class Sketch extends PApplet {
 
   public void settings() {
     if (DEBUG) {
-      size(1200, 800, P3D);
+      size(1050, 1050, P3D);
     } else {
       fullScreen(P3D);
     }
@@ -39,11 +39,59 @@ public class Sketch extends PApplet {
       client = new MQTTClient(this);
       client.connect("mqtt://0.0.0.0:1884", "visualization");
 
-      // load mask
-      mask = loadShape("mask.svg");
-      mask.setFill(color(0, 0, 0));
-      mask.scale(height / mask.height);
-      mask.translate((mask.width * (height / mask.height) - width) / -2, 0);
+      // create mask
+      mask = createShape();
+      mask.beginShape();
+      mask.fill(255, 255, 0);
+      mask.noStroke();
+
+      // add outline
+      mask.vertex(0, 0);
+      mask.vertex(width, 0);
+      mask.vertex(width, height);
+      mask.vertex(0, height);
+
+      // prepare bezier variables
+      float maskBC = 0.552284749831f;
+      float maskX = width / 2f;
+      float maskY = height / 2f;
+      float maskR = height / 2f - 10;
+
+      // add inline
+      mask.beginContour();
+      mask.vertex(maskX - maskR, maskY);
+      mask.bezierVertex(
+          maskX - maskR,
+          maskY + (maskR * maskBC),
+          maskX - (maskR * maskBC),
+          maskY + maskR,
+          maskX,
+          maskY + maskR);
+      mask.bezierVertex(
+          maskX + (maskR * maskBC),
+          maskY + maskR,
+          maskX + maskR,
+          maskY + (maskR * maskBC),
+          maskX + maskR,
+          maskY); // to 2
+      mask.bezierVertex(
+          maskX + maskR,
+          maskY - (maskR * maskBC),
+          maskX + (maskR * maskBC),
+          maskY - maskR,
+          maskX,
+          maskY - maskR);
+      mask.bezierVertex(
+          maskX - (maskR * maskBC),
+          maskY - maskR,
+          maskX - maskR,
+          maskY - (maskR * maskBC),
+          maskX - maskR,
+          maskY);
+      mask.endContour();
+
+      // close shape
+      mask.endShape(CLOSE);
 
       // create visualizations
       viz1 = new electroswing.Visualization(this);
@@ -113,16 +161,7 @@ public class Sketch extends PApplet {
       this.popMatrix();
 
       // draw mask
-      fill(0, 0, 0);
-      noStroke();
       shape(mask, 0, 0);
-      rect(0, 0, (mask.width * (height / mask.height) - width) / -2, height);
-      rect(
-          ((mask.width * (height / mask.height) - width) / -2)
-              + mask.width * (height / mask.height),
-          0,
-          width,
-          height);
 
       // calculate fade
       float fade = 0;
