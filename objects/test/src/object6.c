@@ -79,7 +79,7 @@ double object6_loop(double light_base, double light_amplitude) {
     motorSpeed = 0;
   }
   mot_set(motorSpeed);
-  naos_log("top: %d, bottom: %d, power: %f", top, bottom, power);
+ // naos_log("top: %d, bottom: %d, power: %f", top, bottom, power);
 
   //
 

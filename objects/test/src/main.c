@@ -27,7 +27,7 @@ static void loop() {
       new_power = object1_loop(light_base, light_amplitude);
       break;
     case 2:
-      new_power = object2_loop();
+      new_power = object2_loop(light_base, light_amplitude);
       break;
     case 3:
       new_power = object3_loop(light_base, light_amplitude);
@@ -47,7 +47,6 @@ static void loop() {
 
   // multiply
   last_power *= multiplier;
-
   // check if power changed
   if (new_power != last_power && naos_millis() > last_publish + PUBLISH_INTERVAL) {
     naos_publish_d("value", new_power, 0, false, NAOS_LOCAL);

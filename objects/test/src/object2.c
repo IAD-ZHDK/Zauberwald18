@@ -25,12 +25,17 @@ int x;
 int y;
 int countRe;
 int pixels[NUMPIXELS] = {};
-float pixelsBackgroundAnim[NUMPIXELS] = {};  // angle for sin wave animation
+uint16_t ambient_light_angle[NUMPIXELS] = {};  // angle for sin wave animation
 uint8_t backgroundColors[NUMPIXELS] = {};    // angle for sin wave animation
 uint32_t colors[NUMPIXELS] = {};             //
 uint32_t red;
 uint32_t green;
 uint32_t blue;
+// base color
+uint8_t ambient_red = 255;
+uint8_t ambient_green = 0;
+uint8_t ambient_blue = 255;
+
 
 void object2_setup() {
   // smoothing values for object output
@@ -46,19 +51,19 @@ void object2_setup() {
   apa_init(NUMPIXELS, APA_DEFAULT_CLOCK_PIN, APA_DEFAULT_DATA_PIN);
   // setup background animation
   for (int i = 0; i < NUMPIXELS; i++) {
-    pixelsBackgroundAnim[i] = i;
+    ambient_light_angle[i] = i*26;
   }
 }
 
-double object2_loop() {
-  // read anemometer rate
+double object2_loop(double light_base, double light_amplitude) {
+ // read anemometer rate
   double input = a32_constrain_d(anemo_get(), 0, 5);
   // smooth rate
   input = a32_smooth_update(o1_smoothing, input);
   // calculate power
   power = a32_safe_map_d(input, .6, 5, 0, 1);
 
-  if (power > .4 && start == false) {  // todo: need to check this value
+  if (power > .3 && start == false) {  // todo: need to check this value
     start = true;
     // naos_log("Ss");
   }
@@ -80,24 +85,38 @@ double object2_loop() {
         active = true;
       }
     }
+    ambient_light_angle[i] += 3;
+    ambient_light_angle[i] = ambient_light_angle[i] % 360;
+   if (!active) {
+      // calculate angle
+     // ambient_light_angle[i] += 1;
+     uint16_t light_angle = ambient_light_angle[i];
 
-    if (!active) {
-      pixelsBackgroundAnim[i] += .04;
-      int color = 60 + floor(50 * sin(pixelsBackgroundAnim[i]));     // somewhere between 20 and and 110
-      double fadeDown = a32_safe_map_d(power, 0, .4, 0, color / 2);  // subtract power
-      color = color - fadeDown;
+      // calculate brightness
+      double brightness = (sin((light_angle * M_PI / 180)) + 1) / 2;
+      //naos_log("brightness%f", brightness);
+      brightness = (brightness * light_amplitude) + light_base;  // add an offset so it's never off
+
+      // limit brightness
+      //if (power > brightness) {
+      //  brightness = power;
+      //}
+
+      // ambient lighting
+     // int color = 60 + floor(50 * sin(ambient_light_angle[i]));     // somewhere between 20 and and 110
+      double fadeDown = a32_safe_map_d(power, 0, .4, 0, brightness / 2);  // subtract power
+      brightness = brightness - fadeDown;
       // uint32_t c = colors[i];
-      // naos_log("power%d", c);
+      uint8_t R = ambient_red * brightness;
+      uint8_t G = ambient_green * brightness;
+      uint8_t B = ambient_blue * brightness;
+      backgroundColors[i] =  ambient_red * brightness;
 
-      uint8_t R = color;  // c  >> 16;
-      uint8_t G = 0;
-      uint8_t B = color;
-      backgroundColors[i] = color;
       if (colors[i] == 0) {
         //   colors == R+G+B;
         apa_set_one(i, R, G, B);
       }
-    }
+   }
   }
   //
   apa_show();
