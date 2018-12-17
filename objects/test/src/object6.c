@@ -15,6 +15,10 @@ double power = 0;
 static a32_smooth_t* o1_smoothing;
 static a32_smooth_t* o2_smoothing;
 
+#define lightMovement 50
+static uint8_t movemenLight = 0;
+static uint32_t last_change = 0;
+
 static int get_sensor(int n) {
   switch (n) {
     case 1:
@@ -106,6 +110,25 @@ double object6_loop(double light_base, double light_amplitude) {
 
   // set neo pixel
   light_set(power, light_base, light_amplitude);
+if (power>.3) {
+
+    uint32_t now = naos_millis();
+
+    // check if sun needs to be changed
+    if (now - last_change >= lightMovement) {
+      // save time
+      last_change = now;
+
+    movemenLight++;
+    if (movemenLight>=24) {
+      movemenLight = 0;
+    }
+  }
+}
+  neo3_set_one(movemenLight, 0, 0, 0);
+  neo3_set_one((movemenLight+1)%24, 0, 0, 0);
+  neo3_set_one((movemenLight+2)%24, 0, 0, 0);
+  neo3_set_one((movemenLight+3)%24, 0, 0, 0);
   neo3_show();
   return power;
 }
